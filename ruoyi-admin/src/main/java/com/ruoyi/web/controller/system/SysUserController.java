@@ -234,4 +234,25 @@ public class SysUserController extends BaseController
         userService.insertUserAuth(userId, roleIds);
         return success();
     }
+
+    /**
+     * 根据学生角色查询信息
+     */
+    @GetMapping("/selectStudent")
+    public List<SysUser> selectStudent ()
+    {
+        List<SysUser> userList =  userService.selectStudentByRole();
+        return userList;
+    }
+
+    /**
+     * 根据教师角色查询信息
+     */
+    @GetMapping("/selectTeacher")
+    public List<SysUser> selectTeacher ()
+    {
+        List<SysUser> userList =  userService.selectTeacherByRole();
+        return userList;
+    }
+
 }

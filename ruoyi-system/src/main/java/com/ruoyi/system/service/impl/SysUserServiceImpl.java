@@ -559,4 +559,20 @@ public class SysUserServiceImpl implements ISysUserService
         }
         return successMsg.toString();
     }
+
+    /**
+     * 根据学生角色查询用户
+     * @return
+     */
+    @Override
+    public List<SysUser> selectStudentByRole() {
+        List<SysUser> userList = userMapper.selectStudentByRole();
+        return userList;
+    }
+
+    @Override
+    public List<SysUser> selectTeacherByRole() {
+        List<SysUser> userList = userMapper.selectTeacherByRole();
+        return userList;
+    }
 }

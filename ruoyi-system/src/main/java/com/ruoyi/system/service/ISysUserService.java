@@ -203,4 +203,16 @@ public interface ISysUserService
      * @return 结果
      */
     public String importUser(List<SysUser> userList, Boolean isUpdateSupport, String operName);
+
+    /**
+     * 根据学生角色查询用户信息
+     * @return
+     */
+    public List<SysUser> selectStudentByRole();
+
+    /**
+     * 根据教师角色查询用户信息
+     * @return
+     */
+    public List<SysUser> selectTeacherByRole();
 }

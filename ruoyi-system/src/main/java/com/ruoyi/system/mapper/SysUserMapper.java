@@ -124,4 +124,16 @@ public interface SysUserMapper
      * @return 结果
      */
     public SysUser checkEmailUnique(String email);
+
+    /**
+     * 根据学生角色查询学生信息
+     * @return
+     */
+    public List<SysUser> selectStudentByRole();
+
+    /**
+     * 根据教师角色查询学生信息
+     * @return
+     */
+    public List<SysUser> selectTeacherByRole();
 }

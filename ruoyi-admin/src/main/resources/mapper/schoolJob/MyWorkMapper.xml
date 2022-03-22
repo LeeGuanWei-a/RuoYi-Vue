@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.schoolJob.mapper.MyWorkMapper">
+    
+    <resultMap type="MyWork" id="MyWorkResult">
+        <result property="workId"    column="work_id"    />
+        <result property="workName"    column="work_name"    />
+        <result property="userId"    column="user_id"    />
+        <result property="titleId"    column="title_id"    />
+        <result property="score"    column="score"    />
+        <result property="upload"    column="upload"    />
+    </resultMap>
+
+    <resultMap id="MyWorkMyTitleResult" type="MyWork" extends="MyWorkResult">
+        <collection property="myTitleList" notNullColumn="sub_title_id" javaType="java.util.List" resultMap="MyTitleResult" />
+    </resultMap>
+
+    <resultMap type="MyTitle" id="MyTitleResult">
+        <result property="titleId"    column="sub_title_id"    />
+        <result property="titleName"    column="sub_title_name"    />
+        <result property="description"    column="sub_description"    />
+        <result property="startTime"    column="sub_start_time"    />
+        <result property="endTime"    column="sub_end_time"    />
+        <result property="upload"    column="sub_upload"    />
+        <result property="classId"    column="sub_class_id"    />
+    </resultMap>
+
+    <sql id="selectMyWorkVo">
+        select work_id, work_name, user_id, title_id, score, upload from my_work
+    </sql>
+
+    <select id="selectMyWorkList" parameterType="MyWork" resultMap="MyWorkResult">
+        <include refid="selectMyWorkVo"/>
+        <where>  
+            <if test="workName != null  and workName != ''"> and work_name like concat('%', #{workName}, '%')</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="titleId != null "> and title_id = #{titleId}</if>
+            <if test="score != null "> and score = #{score}</if>
+            <if test="upload != null  and upload != ''"> and upload = #{upload}</if>
+        </where>
+    </select>
+    
+    <select id="selectMyWorkByWorkId" parameterType="Long" resultMap="MyWorkMyTitleResult">
+        select a.work_id, a.work_name, a.user_id, a.title_id, a.score, a.upload,
+ b.title_id as sub_title_id, b.title_name as sub_title_name, b.description as sub_description, b.start_time as sub_start_time, b.end_time as sub_end_time, b.upload as sub_upload, b.class_id as sub_class_id
+        from my_work a
+        left join my_title b on b.title_id = a.work_id
+        where a.work_id = #{workId}
+    </select>
+        
+    <insert id="insertMyWork" parameterType="MyWork">
+        insert into my_work
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="workId != null">work_id,</if>
+            <if test="workName != null">work_name,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="titleId != null">title_id,</if>
+            <if test="score != null">score,</if>
+            <if test="upload != null">upload,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="workId != null">#{workId},</if>
+            <if test="workName != null">#{workName},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="titleId != null">#{titleId},</if>
+            <if test="score != null">#{score},</if>
+            <if test="upload != null">#{upload},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMyWork" parameterType="MyWork">
+        update my_work
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="workName != null">work_name = #{workName},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="titleId != null">title_id = #{titleId},</if>
+            <if test="score != null">score = #{score},</if>
+            <if test="upload != null">upload = #{upload},</if>
+        </trim>
+        where work_id = #{workId}
+    </update>
+
+    <delete id="deleteMyWorkByWorkId" parameterType="Long">
+        delete from my_work where work_id = #{workId}
+    </delete>
+
+    <delete id="deleteMyWorkByWorkIds" parameterType="String">
+        delete from my_work where work_id in 
+        <foreach item="workId" collection="array" open="(" separator="," close=")">
+            #{workId}
+        </foreach>
+    </delete>
+    
+    <delete id="deleteMyTitleByTitleIds" parameterType="String">
+        delete from my_title where title_id in 
+        <foreach item="titleId" collection="array" open="(" separator="," close=")">
+            #{titleId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteMyTitleByTitleId" parameterType="Long">
+        delete from my_title where title_id = #{titleId}
+    </delete>
+
+    <insert id="batchMyTitle">
+        insert into my_title( title_id, title_name, description, start_time, end_time, upload, class_id) values
+		<foreach item="item" index="index" collection="list" separator=",">
+            ( #{item.titleId}, #{item.titleName}, #{item.description}, #{item.startTime}, #{item.endTime}, #{item.upload}, #{item.classId})
+        </foreach>
+    </insert>
+</mapper>

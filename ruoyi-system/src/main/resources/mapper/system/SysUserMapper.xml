@@ -216,5 +216,24 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  			#{userId}
         </foreach> 
  	</delete>
-	
+
+	<select id="selectStudentByRole" resultType="com.ruoyi.common.core.domain.entity.SysUser">
+		SELECT
+			*
+		FROM
+			sys_user u
+				LEFT JOIN sys_user_role ur ON u.user_id = ur.user_id
+				LEFT JOIN sys_role r ON ur.role_id = r.role_id
+		WHERE r.role_key = 'student'
+	</select>
+
+	<select id="selectTeacherByRole" resultType="com.ruoyi.common.core.domain.entity.SysUser">
+		SELECT
+			*
+		FROM
+			sys_user u
+				LEFT JOIN sys_user_role ur ON u.user_id = ur.user_id
+				LEFT JOIN sys_role r ON ur.role_id = r.role_id
+		WHERE r.role_key = 'teacher'
+	</select>
 </mapper> 
