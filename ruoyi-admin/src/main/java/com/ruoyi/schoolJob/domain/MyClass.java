@@ -2,6 +2,7 @@ package com.ruoyi.schoolJob.domain;
 
 import java.util.List;
 
+import com.ruoyi.common.annotation.DataSource;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -19,6 +20,8 @@ public class MyClass extends BaseEntity
     /** 教学班Id */
     private Long classId;
 
+    private String classCode;
+
     /** 教学班名称 */
     @Excel(name = "教学班名称")
     private String className;
@@ -26,6 +29,8 @@ public class MyClass extends BaseEntity
     /** 教师Id */
     @Excel(name = "教师Id")
     private Long userId;
+
+    private String nikeName;
 
     /** 用户信息信息 */
     private List<SysUser> sysUserList;
@@ -44,7 +49,15 @@ public class MyClass extends BaseEntity
         this.className = className;
     }
 
-    public String getClassName() 
+    public String getClassCode() {
+        return classCode;
+    }
+
+    public void setClassCode(String classCode) {
+        this.classCode = classCode;
+    }
+
+    public String getClassName()
     {
         return className;
     }
@@ -56,6 +69,14 @@ public class MyClass extends BaseEntity
     public Long getUserId() 
     {
         return userId;
+    }
+
+    public String getNikeName() {
+        return nikeName;
+    }
+
+    public void setNikeName(String nikeName) {
+        this.nikeName = nikeName;
     }
 
     public List<SysUser> getSysUserList()
@@ -72,8 +93,10 @@ public class MyClass extends BaseEntity
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("classId", getClassId())
+            .append("classCode", getClassCode())
             .append("className", getClassName())
             .append("userId", getUserId())
+            .append("nikeName", getNikeName())
             .append("sysUserList", getSysUserList())
             .toString();
     }

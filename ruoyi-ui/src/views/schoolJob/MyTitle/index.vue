@@ -98,7 +98,7 @@
 
     <el-table v-loading="loading" :data="MyTitleList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="题目Id" align="center" prop="titleId" />
+      <el-table-column label="题目序号" align="center" prop="titleId" />
       <el-table-column label="题目名称" align="center" prop="titleName" />
       <el-table-column label="描述" align="center" prop="description" />
       <el-table-column label="开始时间" align="center" prop="startTime" width="180">
@@ -120,14 +120,13 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['schoolJob:MyTitle:edit']"
+
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['schoolJob:MyTitle:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -259,6 +258,7 @@ export default {
     getList() {
       this.loading = true;
       listMyTitle(this.queryParams).then(response => {
+        console.log(JSON.stringify(response))
         this.MyTitleList = response.rows;
         this.total = response.total;
         this.loading = false;

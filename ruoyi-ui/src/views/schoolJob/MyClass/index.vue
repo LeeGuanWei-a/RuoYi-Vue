@@ -73,19 +73,20 @@
 
     <el-table v-loading="loading" :data="MyClassList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="教学班Id" align="center" prop="classId"/>
-      <el-table-column label="教学班名称" align="center" prop="className">
-        <template slot-scope="scope">
-<!--          <dict-tag :options="dict.type.sys_class" :value="scope.row.className"/>-->
-          <dict-tag :value="scope.row.className"/>
-        </template>
-      </el-table-column>
-      <el-table-column label="教师名称" align="center" prop="userId">
-        <template slot-scope="scope">
-<!--          <dict-tag :options="dict.type.sys_class" :value="scope.row.userId"/>-->
-          <dict-tag :value="scope.row.userId"/>
-        </template>
-      </el-table-column>
+      <el-table-column label="教学班序号" v-if="false" align="center" prop="classId"/>
+      <el-table-column label="教学班编号" align="center" prop="classCode"/>
+      <el-table-column label="教学班名称" align="center" prop="className"/>
+<!--        <template slot-scope="scope">-->
+<!--&lt;!&ndash;          <dict-tag :options="dict.type.sys_class" :value="scope.row.className"/>&ndash;&gt;-->
+<!--          <dict-tag :value="scope.row.className"/>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
+      <el-table-column label="教师名称" align="center" prop="nick_name"/>
+<!--        <template slot-scope="scope">-->
+<!--&lt;!&ndash;          <dict-tag :options="dict.type.sys_class" :value="scope.row.userId"/>&ndash;&gt;-->
+<!--          <dict-tag :value="scope.row.userId"/>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -118,12 +119,24 @@
     <!-- 添加或修改MyClass对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+        <el-form-item label="教学班编号" prop="classCode">
+          <el-input v-model="form.classCode" placeholder="请输入教学班编号" />
+        </el-form-item>
         <el-form-item label="教学班" prop="className">
           <el-input v-model="form.className" placeholder="请输入教学班名称" />
         </el-form-item>
-        <el-form-item label="教师名称" prop="userId">
-          <el-input v-model="form.userId" placeholder="请输入教师名称" />
-        </el-form-item>
+<!--        <el-form-item label="教师名称" prop="userId">-->
+<!--          <el-input v-model="form.userId" placeholder="请输入教师名称" />-->
+<!--        </el-form-item>-->
+        <el-select v-model="form.userId" label="教师名称" filterable placeholder="请输入教师名称">
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+
         <el-button @click="transfer = true;" style="float: left; background-color: #87CEFA;">关联</el-button>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -208,6 +221,7 @@ export default {
     getList() {
       this.loading = true;
       listMyClass(this.queryParams).then(response => {
+        console.log(JSON.stringify(response))
         this.MyClassList = response.rows;
         this.total = response.total;
         this.loading = false;

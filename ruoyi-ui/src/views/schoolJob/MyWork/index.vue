@@ -91,30 +91,35 @@
 
     <el-table v-loading="loading" :data="MyWorkList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="作品Id" align="center" prop="workId" />
+      <el-table-column label="作品序号" align="center" prop="workId" />
       <el-table-column label="作品名称" align="center" prop="workName">
         <template slot-scope="scope">
-          <dict-tag :options="dict.type.sys_work" :value="scope.row.workName"/>
+<!--          <dict-tag :options="dict.type.sys_work" :value="scope.row.workName"/>-->
+          <dict-tag :value="scope.row.workName"/>
         </template>
       </el-table-column>
       <el-table-column label="学生Id" align="center" prop="userId">
         <template slot-scope="scope">
-          <dict-tag :options="dict.type.sys_work" :value="scope.row.userId"/>
+<!--          <dict-tag :options="dict.type.sys_work" :value="scope.row.userId"/>-->
+          <dict-tag :value="scope.row.userId"/>
         </template>
       </el-table-column>
       <el-table-column label="题目Id" align="center" prop="titleId">
         <template slot-scope="scope">
-          <dict-tag :options="dict.type.sys_work" :value="scope.row.titleId"/>
+<!--          <dict-tag :options="dict.type.sys_work" :value="scope.row.titleId"/>-->
+          <dict-tag :value="scope.row.titleId"/>
         </template>
       </el-table-column>
       <el-table-column label="作品分数" align="center" prop="score">
         <template slot-scope="scope">
-          <dict-tag :options="dict.type.sys_work" :value="scope.row.score"/>
+<!--          <dict-tag :options="dict.type.sys_work" :value="scope.row.score"/>-->
+          <dict-tag :value="scope.row.score"/>
         </template>
       </el-table-column>
       <el-table-column label="文件上传" align="center" prop="upload">
         <template slot-scope="scope">
-          <dict-tag :options="dict.type.sys_work" :value="scope.row.upload"/>
+<!--          <dict-tag :options="dict.type.sys_work" :value="scope.row.upload"/>-->
+          <dict-tag :value="scope.row.upload"/>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
