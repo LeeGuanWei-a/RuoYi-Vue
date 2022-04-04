@@ -104,6 +104,11 @@ public class MyClassServiceImpl implements IMyClassService
         return myClassMapper.deleteMyClassByClassId(classId);
     }
 
+    @Override
+    public List<SysUser> getTeachers() {
+        return myClassMapper.getTeachers();
+    }
+
     /**
      * 新增用户信息信息
      * 

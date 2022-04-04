@@ -9,6 +9,15 @@ export function listMyClass(query) {
   })
 }
 
+// 查询教师列表
+export function listMyTeachers() {
+  return request({
+    url: '/schoolJob/MyClass/teachers',
+    method: 'get',
+  })
+}
+
+
 // 查询MyClass详细
 export function getMyClass(classId) {
   return request({

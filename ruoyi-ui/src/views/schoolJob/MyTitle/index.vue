@@ -98,7 +98,7 @@
 
     <el-table v-loading="loading" :data="MyTitleList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="题目序号" align="center" prop="titleId" />
+      <el-table-column label="题目序号" v-if="false" align="center" prop="titleId" />
       <el-table-column label="题目名称" align="center" prop="titleName" />
       <el-table-column label="描述" align="center" prop="description" />
       <el-table-column label="开始时间" align="center" prop="startTime" width="180">
@@ -141,7 +141,7 @@
     />
 
     <!-- 添加或修改MyTitle对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+    <el-dialog title="题目信息" :visible.sync="open" width="900px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="题目名称" prop="titleName">
           <el-input v-model="form.titleName" placeholder="请输入题目名称" />
@@ -165,8 +165,18 @@
             placeholder="选择结束时间">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="文件路径" prop="upload">
-          <el-input v-model="form.upload" placeholder="请输入文件路径" />
+<!--        <el-form-item label="文件路径" prop="upload">-->
+<!--          <el-input v-model="form.upload" placeholder="请输入文件路径" />-->
+<!--        </el-form-item>-->
+        <el-form-item label="文件上传" prop="upload">
+          <el-upload
+            class="upload-demo"
+            drag
+            action="https://jsonplaceholder.typicode.com/posts/"
+            multiple>
+            <i class="el-icon-upload"></i>
+            <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+          </el-upload>
         </el-form-item>
         <el-form-item label="教学班Id" prop="classId">
           <el-input v-model="form.classId" placeholder="请输入教学班Id" />

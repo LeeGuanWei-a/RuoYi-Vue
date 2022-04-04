@@ -151,7 +151,7 @@
     />
 
     <!-- 添加或修改MyWork对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+    <el-dialog title="作品信息" :visible.sync="open" width="900px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="作品名称" prop="workName">
           <el-input v-model="form.workName" placeholder="请输入作品名称" />

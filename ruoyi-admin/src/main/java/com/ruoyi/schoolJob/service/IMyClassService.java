@@ -1,6 +1,8 @@
 package com.ruoyi.schoolJob.service;
 
 import java.util.List;
+
+import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.schoolJob.domain.MyClass;
 
 /**
@@ -56,4 +58,10 @@ public interface IMyClassService
      * @return 结果
      */
     public int deleteMyClassByClassId(Long classId);
+
+    /**
+     * 查询教师
+     * @return
+     */
+    public List<SysUser> getTeachers();
 }

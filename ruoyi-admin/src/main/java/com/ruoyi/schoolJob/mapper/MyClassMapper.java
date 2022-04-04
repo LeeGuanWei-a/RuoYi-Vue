@@ -83,4 +83,10 @@ public interface MyClassMapper
      * @return 结果
      */
     public int deleteSysUserByUserId(Long classId);
+
+    /**
+     * 查询教师
+     * @return
+     */
+    public List<SysUser> getTeachers();
 }

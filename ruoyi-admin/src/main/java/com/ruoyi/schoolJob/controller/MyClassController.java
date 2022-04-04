@@ -2,6 +2,8 @@ package com.ruoyi.schoolJob.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.common.core.domain.entity.SysUser;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -98,5 +100,14 @@ public class MyClassController extends BaseController
     public AjaxResult remove(@PathVariable Long[] classIds)
     {
         return toAjax(myClassService.deleteMyClassByClassIds(classIds));
+    }
+
+    @PreAuthorize("@ss.hasPermi('schoolJob:MyClass:teachers')")
+    @GetMapping("/teachers")
+    public List<SysUser> getTeacher()
+    {
+        List<SysUser> list = myClassService.getTeachers();
+        System.out.println("==" + list);
+        return list;
     }
 }

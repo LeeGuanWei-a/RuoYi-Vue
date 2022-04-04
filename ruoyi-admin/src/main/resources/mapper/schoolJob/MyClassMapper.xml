@@ -6,8 +6,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <resultMap type="MyClass" id="MyClassResult">
         <result property="classId"    column="class_id"    />
+        <result property="classCode"    column="class_code"    />
         <result property="className"    column="class_name"    />
         <result property="userId"    column="user_id"    />
+        <result property="nickName"    column="nick_name"    />
     </resultMap>
 
     <resultMap id="MyClassSysUserResult" type="MyClass" extends="MyClassResult">
@@ -37,7 +39,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectMyClassVo">
-教学班列表        SELECT
+        SELECT
             c.class_id,
             c.class_name,
             c.class_code,
@@ -124,4 +126,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             ( #{item.userId}, #{item.deptId}, #{item.userName}, #{item.nickName}, #{item.userType}, #{item.email}, #{item.phonenumber}, #{item.sex}, #{item.avatar}, #{item.password}, #{item.status}, #{item.delFlag}, #{item.loginIp}, #{item.loginDate}, #{item.createBy}, #{item.createTime}, #{item.updateBy}, #{item.updateTime}, #{item.remark})
         </foreach>
     </insert>
+
+    <select id="getTeachers" resultType="java.util.Map">
+        SELECT
+            u.user_id,u.nick_name
+        FROM
+            sys_user u
+                LEFT JOIN sys_user_role ur ON u.user_id = ur.user_id
+                LEFT JOIN sys_role r ON ur.role_id = r.role_id
+        WHERE
+            r.role_id = 2
+    </select>
 </mapper>

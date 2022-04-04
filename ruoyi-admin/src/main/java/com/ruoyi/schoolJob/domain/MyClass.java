@@ -30,7 +30,7 @@ public class MyClass extends BaseEntity
     @Excel(name = "教师Id")
     private Long userId;
 
-    private String nikeName;
+    private String nickName;
 
     /** 用户信息信息 */
     private List<SysUser> sysUserList;
@@ -71,12 +71,12 @@ public class MyClass extends BaseEntity
         return userId;
     }
 
-    public String getNikeName() {
-        return nikeName;
+    public String getNickName() {
+        return nickName;
     }
 
-    public void setNikeName(String nikeName) {
-        this.nikeName = nikeName;
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
     }
 
     public List<SysUser> getSysUserList()
@@ -96,7 +96,7 @@ public class MyClass extends BaseEntity
             .append("classCode", getClassCode())
             .append("className", getClassName())
             .append("userId", getUserId())
-            .append("nikeName", getNikeName())
+            .append("nickName", getNickName())
             .append("sysUserList", getSysUserList())
             .toString();
     }

@@ -81,7 +81,7 @@
 <!--          <dict-tag :value="scope.row.className"/>-->
 <!--        </template>-->
 <!--      </el-table-column>-->
-      <el-table-column label="教师名称" align="center" prop="nick_name"/>
+      <el-table-column label="教师名称" align="center" prop="nickName"/>
 <!--        <template slot-scope="scope">-->
 <!--&lt;!&ndash;          <dict-tag :options="dict.type.sys_class" :value="scope.row.userId"/>&ndash;&gt;-->
 <!--          <dict-tag :value="scope.row.userId"/>-->
@@ -117,8 +117,8 @@
 
 
     <!-- 添加或修改MyClass对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+    <el-dialog title="教学班信息" :visible.sync="open" width="550px" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="100px">
         <el-form-item label="教学班编号" prop="classCode">
           <el-input v-model="form.classCode" placeholder="请输入教学班编号" />
         </el-form-item>
@@ -128,16 +128,19 @@
 <!--        <el-form-item label="教师名称" prop="userId">-->
 <!--          <el-input v-model="form.userId" placeholder="请输入教师名称" />-->
 <!--        </el-form-item>-->
+        <el-form-item label="教师名称" prop="userId">
         <el-select v-model="form.userId" label="教师名称" filterable placeholder="请输入教师名称">
-          <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
-          </el-option>
-        </el-select>
-
-        <el-button @click="transfer = true;" style="float: left; background-color: #87CEFA;">关联</el-button>
+            <el-option
+              v-for="item in options"
+              :key="item.user_id"
+              :label="item.nick_name"
+              :value="item.user_id">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button @click="transfer = true;" style="float: left; background-color: #87CEFA;">关联</el-button>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -149,16 +152,16 @@
     <!--教学班学生管理-->
     <el-form>
       <el-dialog
-        class="Form"
         title="教学班管理"
         :close-on-click-modal="false"
         :visible.sync="transfer"
+        custom-class="width"
       >
         <el-transfer
           filterable
           filter-placeholder="请输入学生名称"
-          v-model="value"
-          :data="data">
+          v-model="form.users"
+          :data="users">
         </el-transfer>
       </el-dialog>
     </el-form>
@@ -169,7 +172,7 @@
 </template>
 
 <script>
-import { listMyClass, getMyClass, delMyClass, addMyClass, updateMyClass } from "@/api/schoolJob/MyClass";
+import { listMyClass, listMyTeachers, getMyClass, delMyClass, addMyClass, updateMyClass } from "@/api/schoolJob/MyClass";
 
 export default {
   name: "MyClass",
@@ -208,6 +211,10 @@ export default {
       },
       // 表单参数
       form: {},
+      //教师列表
+      options:[],
+      //学生列表
+      users:[],
       // 表单校验
       rules: {
       }
@@ -215,18 +222,27 @@ export default {
   },
   created() {
     this.getList();
+    this.getTeachers();
+    this.getStudents();
   },
   methods: {
     /** 查询MyClass列表 */
     getList() {
       this.loading = true;
       listMyClass(this.queryParams).then(response => {
-        console.log(JSON.stringify(response))
         this.MyClassList = response.rows;
         this.total = response.total;
         this.loading = false;
       });
     },
+    // 查询教师列表
+    getTeachers(){
+      var that = this;
+      listMyTeachers().then(res =>{
+        that.options = res
+      })
+    },
+
     // 取消按钮
     cancel() {
       this.open = false;
@@ -299,7 +315,7 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const classIds = row.classId || this.ids;
-      this.$modal.confirm('是否确认删除MyClass编号为"' + classIds + '"的数据项？').then(function() {
+      this.$modal.confirm('是否确认删除选择的教学班').then(function() {
         return delMyClass(classIds);
       }).then(() => {
         this.getList();
@@ -355,7 +371,8 @@ export default {
 </script>
 
 <style scoped>
-.Form{
-  min-width: 700px !important;
-}
+  .width{
+    min-width: 850px;
+    max-width: 850px;
+  }
 </style>
