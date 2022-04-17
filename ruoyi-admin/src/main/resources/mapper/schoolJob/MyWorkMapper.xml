@@ -71,7 +71,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="userId != null">user_id,</if>
             <if test="titleId != null">title_id,</if>
             <if test="score != null">score,</if>
-            <if test="upload != null">upload,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="workId != null">#{workId},</if>
@@ -79,7 +78,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="userId != null">#{userId},</if>
             <if test="titleId != null">#{titleId},</if>
             <if test="score != null">#{score},</if>
-            <if test="upload != null">#{upload},</if>
          </trim>
     </insert>
 
@@ -90,7 +88,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="userId != null">user_id = #{userId},</if>
             <if test="titleId != null">title_id = #{titleId},</if>
             <if test="score != null">score = #{score},</if>
-            <if test="upload != null">upload = #{upload},</if>
         </trim>
         where work_id = #{workId}
     </update>
@@ -118,9 +115,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <insert id="batchMyTitle">
-        insert into my_title( title_id, title_name, description, start_time, end_time, upload, class_id) values
+        insert into my_title( title_id, title_name, description, start_time, end_time, file_id, class_id) values
 		<foreach item="item" index="index" collection="list" separator=",">
-            ( #{item.titleId}, #{item.titleName}, #{item.description}, #{item.startTime}, #{item.endTime}, #{item.upload}, #{item.classId})
+            ( #{item.titleId}, #{item.titleName}, #{item.description}, #{item.startTime}, #{item.endTime}, #{item.fileId}, #{item.classId})
         </foreach>
     </insert>
 </mapper>

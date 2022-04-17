@@ -34,18 +34,6 @@ public class SysFileInfoServiceImpl implements ISysFileInfoService
     }
 
     /**
-     * 查询文件信息列表
-     *
-     * @param sysFileInfo 文件信息
-     * @return 文件信息
-     */
-    @Override
-    public List<SysFileInfo> selectSysFileInfoList(SysFileInfo sysFileInfo)
-    {
-        return sysFileInfoMapper.selectSysFileInfoList(sysFileInfo);
-    }
-
-    /**
      * 新增文件信息
      *
      * @param sysFileInfo 文件信息
@@ -57,17 +45,6 @@ public class SysFileInfoServiceImpl implements ISysFileInfoService
         return sysFileInfoMapper.insertSysFileInfo(sysFileInfo);
     }
 
-    /**
-     * 修改文件信息
-     *
-     * @param sysFileInfo 文件信息
-     * @return 结果
-     */
-    @Override
-    public int updateSysFileInfo(SysFileInfo sysFileInfo)
-    {
-        return sysFileInfoMapper.updateSysFileInfo(sysFileInfo);
-    }
 
     /**
      * 批量删除文件信息

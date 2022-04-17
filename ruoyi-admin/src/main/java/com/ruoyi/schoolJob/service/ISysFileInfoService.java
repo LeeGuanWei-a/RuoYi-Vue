@@ -12,6 +12,7 @@ import java.util.List;
  */
 public interface ISysFileInfoService
 {
+
     /**
      * 查询文件信息
      *
@@ -21,14 +22,6 @@ public interface ISysFileInfoService
     public SysFileInfo selectSysFileInfoByFileId(Long fileId);
 
     /**
-     * 查询文件信息列表
-     *
-     * @param sysFileInfo 文件信息
-     * @return 文件信息集合
-     */
-    public List<SysFileInfo> selectSysFileInfoList(SysFileInfo sysFileInfo);
-
-    /**
      * 新增文件信息
      *
      * @param sysFileInfo 文件信息
@@ -36,13 +29,6 @@ public interface ISysFileInfoService
      */
     public int insertSysFileInfo(SysFileInfo sysFileInfo);
 
-    /**
-     * 修改文件信息
-     *
-     * @param sysFileInfo 文件信息
-     * @return 结果
-     */
-    public int updateSysFileInfo(SysFileInfo sysFileInfo);
 
     /**
      * 批量删除文件信息

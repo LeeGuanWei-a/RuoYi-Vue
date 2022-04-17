@@ -113,12 +113,14 @@
         </template>
       </el-table-column>
       <el-table-column label="文件下载" align="center" prop="fileId">
+        <template slot-scope="scope">
         <el-button
           size="mini"
           type="text"
           icon="el-icon-edit"
           @click="handleDownload(scope.row)"
         >下载</el-button>
+        </template>
       </el-table-column>
 <!--      <el-table-column label="教学班Id" align="center" prop="classId" />-->
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -239,6 +241,7 @@
 <script>
 import { getToken } from "@/utils/auth";
 import { listMyTitle, getMyTitle, delMyTitle, addMyTitle, updateMyTitle, listMyClass} from "@/api/schoolJob/MyTitle";
+import {addInfo, getInfo} from "@/api/schoolJob/info";
 
 export default {
   name: "MyTitle",
@@ -296,6 +299,8 @@ export default {
         fileList: [],
       },
       userId: '',
+      fileName: '',
+      filePath: '',
     };
   },
   created() {
@@ -306,20 +311,28 @@ export default {
   methods: {
     // 文件下载处理
     handleDownload(row) {
-      var name = row.fileName;
-      var url = row.filePath;
-      var suffix = url.substring(url.lastIndexOf("."), url.length);
-      const a = document.createElement('a')
-      a.setAttribute('download', name + suffix)
-      a.setAttribute('target', '_blank')
-      a.setAttribute('href', url)
-      a.click()
+      let fileId = row.fileId;
+      getInfo(fileId).then((res) => {
+        //console.log(JSON.stringify(res))
+        if (res !== null){
+          const name = res.fileName;
+          const url = res.filePath;
+          // const suffix = url.substring(url.lastIndexOf("."), url.length);
+          const a = document.createElement('a')
+          // a.setAttribute('download', name + suffix)
+          a.setAttribute('download', name)
+          a.setAttribute('target', '_blank')
+          a.setAttribute('href', url)
+          a.click()
+          console.log(JSON.stringify(a.download))
+        }
+      })
     },
     /** 查询MyTitle列表 */
     getList() {
       this.loading = true;
       listMyTitle(this.queryParams).then(response => {
-        console.log(JSON.stringify(response))
+        //console.log(JSON.stringify(response))
         this.MyTitleList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -363,7 +376,7 @@ export default {
     // 查询教学班
     listMyClass(){
       listMyClass().then((res) => {
-        console.log(JSON.stringify(res))
+        //console.log(JSON.stringify(res))
         this.classList = res;
       })
     },
@@ -379,7 +392,7 @@ export default {
       this.reset();
       const titleId = row.titleId || this.ids
       getMyTitle(titleId).then(response => {
-        console.log(JSON.stringify(response))
+        //console.log(JSON.stringify(response))
         this.form = response.data;
         this.myClassList = response.data.myClassList;
         this.open = true;
@@ -394,12 +407,14 @@ export default {
           this.form.myClassList = this.myClassList;
           if (this.form.titleId != null) {
             updateMyTitle(this.form).then(response => {
+              console.log(JSON.stringify(this.form))
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
             addMyTitle(this.form).then(response => {
+              console.log(JSON.stringify(this.form))
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -420,8 +435,17 @@ export default {
     // 文件上传成功处理
     handleFileSuccess(response, file, fileList) {
       this.upload.isUploading = false;
-      this.form.filePath = response.url;
-      this.msgSuccess(response.msg);
+      this.fileName = file.name;
+      this.filePath = response.url;
+      // this.msgSuccess(response.msg);
+      const data = {
+        fileName : this.fileName,
+        filePath : this.filePath
+      }
+      addInfo(data).then((res) => {
+        //console.log(JSON.stringify(res))
+        this.form.fileId = res;
+      })
     },
 
     /** 删除按钮操作 */

@@ -11,7 +11,7 @@ public class SysFileInfo extends BaseEntity {
     /**
      * 文件id
      */
-    private Long fileId;
+    private int fileId;
 
     /**
      * 文件名称
@@ -25,11 +25,11 @@ public class SysFileInfo extends BaseEntity {
     @Excel(name = "文件路径")
     private String filePath;
 
-    public void setFileId(Long fileId) {
+    public void setFileId(int fileId) {
         this.fileId = fileId;
     }
 
-    public Long getFileId() {
+    public int getFileId() {
         return fileId;
     }
 

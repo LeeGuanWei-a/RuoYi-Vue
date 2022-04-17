@@ -29,38 +29,13 @@ public class SysFileInfoController extends BaseController
     private ISysFileInfoService sysFileInfoService;
 
     /**
-     * 查询文件信息列表
-     */
-    @PreAuthorize("@ss.hasPermi('system:info:list')")
-    @GetMapping("/list")
-    public TableDataInfo list(SysFileInfo sysFileInfo)
-    {
-        startPage();
-        List<SysFileInfo> list = sysFileInfoService.selectSysFileInfoList(sysFileInfo);
-        return getDataTable(list);
-    }
-
-    /**
-     * 导出文件信息列表
-     */
-    @PreAuthorize("@ss.hasPermi('system:info:export')")
-    @Log(title = "文件信息", businessType = BusinessType.EXPORT)
-    @PostMapping("/export")
-    public void export(HttpServletResponse response, SysFileInfo sysFileInfo)
-    {
-        List<SysFileInfo> list = sysFileInfoService.selectSysFileInfoList(sysFileInfo);
-        ExcelUtil<SysFileInfo> util = new ExcelUtil<SysFileInfo>(SysFileInfo.class);
-        util.exportExcel(response, list, "文件信息数据");
-    }
-
-    /**
      * 获取文件信息详细信息
      */
     @PreAuthorize("@ss.hasPermi('system:info:query')")
     @GetMapping(value = "/{fileId}")
-    public AjaxResult getInfo(@PathVariable("fileId") Long fileId)
+    public SysFileInfo getInfo(@PathVariable("fileId") Long fileId)
     {
-        return AjaxResult.success(sysFileInfoService.selectSysFileInfoByFileId(fileId));
+        return sysFileInfoService.selectSysFileInfoByFileId(fileId);
     }
 
     /**
@@ -69,20 +44,10 @@ public class SysFileInfoController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:info:add')")
     @Log(title = "文件信息", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody SysFileInfo sysFileInfo)
+    public int add(@RequestBody SysFileInfo sysFileInfo)
     {
-        return toAjax(sysFileInfoService.insertSysFileInfo(sysFileInfo));
-    }
-
-    /**
-     * 修改文件信息
-     */
-    @PreAuthorize("@ss.hasPermi('system:info:edit')")
-    @Log(title = "文件信息", businessType = BusinessType.UPDATE)
-    @PutMapping
-    public AjaxResult edit(@RequestBody SysFileInfo sysFileInfo)
-    {
-        return toAjax(sysFileInfoService.updateSysFileInfo(sysFileInfo));
+        sysFileInfoService.insertSysFileInfo(sysFileInfo);
+        return sysFileInfo.getFileId();
     }
 
     /**
