@@ -1,10 +1,19 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="80px">
-      <el-form-item label="教学班" prop="className">
+      <el-form-item label="教学班" prop="classCode">
         <el-input
-          v-model="queryParams.className"
+          v-model="queryParams.classCode"
           placeholder="请输入教学班"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="题目名称" prop="titleName">
+        <el-input
+          v-model="queryParams.titleName"
+          placeholder="请输入题目名称"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -19,19 +28,10 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="学生名称" prop="username">
+      <el-form-item label="学生名称" prop="nickName">
         <el-input
-          v-model="queryParams.username"
+          v-model="queryParams.nickName"
           placeholder="请输入学生名称"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="题目名称" prop="titleName">
-        <el-input
-          v-model="queryParams.titleName"
-          placeholder="请输入题目名称"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -98,14 +98,16 @@
       <el-table-column label="作品名称" align="center" prop="workName"/>
       <el-table-column label="学生名称" align="center" prop="nickName"/>
       <el-table-column label="作品分数" align="center" prop="score"/>
-<!--      <el-table-column label="文件下载" align="center" prop="fileId">-->
-<!--        <el-button-->
-<!--          size="mini"-->
-<!--          type="text"-->
-<!--          icon="el-icon-edit"-->
-<!--          @click="handleDownload(scope.row)"-->
-<!--        >下载</el-button>-->
-<!--      </el-table-column>-->
+      <el-table-column label="文件下载" align="center" prop="fileId">
+        <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-edit"
+            @click="handleDownload(scope.row)"
+          >下载</el-button>
+        </template>
+      </el-table-column>
 
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -181,6 +183,7 @@
 <script>
 import { getToken } from "@/utils/auth";
 import { listMyWork, getMyWork, delMyWork, addMyWork, updateMyWork, selectTitle} from "@/api/schoolJob/MyWork";
+import {addInfo, getInfo} from "@/api/schoolJob/info";
 
 export default {
   name: "MyWork",
@@ -213,10 +216,9 @@ export default {
         pageNum: 1,
         pageSize: 10,
         workName: null,
-        userId: null,
-        titleId: null,
-        score: null,
-        upload: null
+        classCode: null,
+        nickName: null,
+        titleName: null,
       },
       // 表单参数
       form: {},
@@ -236,6 +238,8 @@ export default {
       },
       options: [],
       userId: '',
+      fileName: '',
+      filePath: '',
     };
   },
   created() {
@@ -246,34 +250,40 @@ export default {
   methods: {
     //  选择题目
     handleChange(value) {
-      console.log(JSON.stringify(value));
+      //console.log(JSON.stringify(value));
     },
     // 文件下载处理
     handleDownload(row) {
-      var name = row.fileName;
-      var url = row.filePath;
-      var suffix = url.substring(url.lastIndexOf("."), url.length);
-      const a = document.createElement('a')
-      a.setAttribute('download', name + suffix)
-      a.setAttribute('target', '_blank')
-      a.setAttribute('href', url)
-      a.click()
+      let fileId = row.fileId;
+      getInfo(fileId).then((res) => {
+        //console.log(JSON.stringify(res))
+        if (res !== null){
+          const name = res.fileName;
+          const url = res.filePath;
+          // const suffix = url.substring(url.lastIndexOf("."), url.length);
+          const a = document.createElement('a')
+          // a.setAttribute('download', name + suffix)
+          a.setAttribute('download', name)
+          a.setAttribute('target', '_blank')
+          a.setAttribute('href', url)
+          a.click()
+        }
+      })
     },
     /** 查询MyWork列表 */
     getList() {
       this.loading = true;
       listMyWork(this.queryParams).then(res => {
-        console.log(JSON.stringify(res))
+        //console.log(JSON.stringify(res))
         this.MyWorkList = res.rows;
         this.total = res.total;
         this.loading = false;
-        console.log("==" +  JSON.stringify(this.MyWorkList))
       });
     },
     async selectTitle(){
       let that = this;
       selectTitle().then((res) => {
-        console.log(JSON.stringify(res))
+        //console.log(JSON.stringify(res))
         if (res !== null){
           that.options = res;
         }
@@ -341,7 +351,7 @@ export default {
           if (this.form.workId != null) {
             this.form.myTitleList = this.myTitleList;
             this.form.titleId = this.form.titleId[1];
-            console.log(JSON.stringify(this.form.titleId))
+            //console.log(JSON.stringify(this.form.titleId))
             updateMyWork(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
@@ -351,8 +361,9 @@ export default {
             this.form.myTitleList = this.myTitleList;
             this.form.userId = this.userId;
             this.form.titleId = this.form.titleId[1];
-            console.log(JSON.stringify(this.form.titleId))
+            //console.log(JSON.stringify(this.form.titleId))
             addMyWork(this.form).then(response => {
+              //console.log(JSON.stringify(this.form))
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -373,8 +384,17 @@ export default {
     // 文件上传成功处理
     handleFileSuccess(response, file, fileList) {
       this.upload.isUploading = false;
-      this.form.filePath = response.url;
-      this.msgSuccess(response.msg);
+      this.fileName = file.name;
+      this.filePath = response.url;
+      // this.msgSuccess(response.msg);
+      const data = {
+        fileName : this.fileName,
+        filePath : this.filePath
+      }
+      addInfo(data).then((res) => {
+        //console.log(JSON.stringify(res))
+        this.form.fileId = res;
+      })
     },
     /** 删除按钮操作 */
     handleDelete(row) {

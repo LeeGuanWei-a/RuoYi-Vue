@@ -42,7 +42,7 @@ public class MyWork extends BaseEntity
     private Long score;
 
     /** 文件上传 */
-    private Long fileId;
+    private int fileId;
 
 
     /** MyTitle信息 */
@@ -126,11 +126,11 @@ public class MyWork extends BaseEntity
         return score;
     }
 
-    public Long getFileId() {
+    public int getFileId() {
         return fileId;
     }
 
-    public void setFileId(Long fileId) {
+    public void setFileId(int fileId) {
         this.fileId = fileId;
     }
 

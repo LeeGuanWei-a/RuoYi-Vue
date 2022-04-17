@@ -324,7 +324,6 @@ export default {
           a.setAttribute('target', '_blank')
           a.setAttribute('href', url)
           a.click()
-          console.log(JSON.stringify(a.download))
         }
       })
     },
@@ -407,14 +406,14 @@ export default {
           this.form.myClassList = this.myClassList;
           if (this.form.titleId != null) {
             updateMyTitle(this.form).then(response => {
-              console.log(JSON.stringify(this.form))
+              //console.log(JSON.stringify(this.form))
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
             addMyTitle(this.form).then(response => {
-              console.log(JSON.stringify(this.form))
+              //console.log(JSON.stringify(this.form))
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();

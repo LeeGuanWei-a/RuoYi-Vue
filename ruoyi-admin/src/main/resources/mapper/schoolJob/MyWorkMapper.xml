@@ -41,7 +41,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             u.user_id,
             u.nick_name,
             c.class_id,
-            c.class_code
+            c.class_code,
+            w.file_id
         FROM
             my_work w
                 LEFT JOIN my_title t ON w.title_id = t.title_id
@@ -52,7 +53,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectMyWorkList" parameterType="MyWork" resultMap="MyWorkResult">
         <include refid="selectMyWorkVo"/>
         <where>  
+            <if test="classCode != null  and classCode != ''"> and c.class_code like concat('%', #{classCode}, '%')</if>
+            <if test="titleName != null  and titleName != ''"> and t.title_name like concat('%', #{titleName}, '%')</if>
             <if test="workName != null  and workName != ''"> and w.work_name like concat('%', #{workName}, '%')</if>
+            <if test="nickName != null  and nickName != ''"> and u.nick_name like concat('%', #{nickName}, '%')</if>
         </where>
     </select>
     
@@ -70,6 +74,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="workName != null">work_name,</if>
             <if test="userId != null">user_id,</if>
             <if test="titleId != null">title_id,</if>
+            <if test="fileId != null">file_id,</if>
             <if test="score != null">score,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -77,6 +82,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="workName != null">#{workName},</if>
             <if test="userId != null">#{userId},</if>
             <if test="titleId != null">#{titleId},</if>
+            <if test="fileId != null">#{fileId},</if>
             <if test="score != null">#{score},</if>
          </trim>
     </insert>
@@ -87,6 +93,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="workName != null">work_name = #{workName},</if>
             <if test="userId != null">user_id = #{userId},</if>
             <if test="titleId != null">title_id = #{titleId},</if>
+            <if test="fileId != null">file_id = #{fileId},</if>
             <if test="score != null">score = #{score},</if>
         </trim>
         where work_id = #{workId}
