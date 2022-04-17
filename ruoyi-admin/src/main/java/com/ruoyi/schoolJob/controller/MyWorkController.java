@@ -116,4 +116,18 @@ public class MyWorkController extends BaseController
     {
         return myWorkService.selectTitle();
     }
+
+
+    /**
+     * 查询作品分数人数
+     * @param myWork
+     * @return
+     */
+    @PreAuthorize("@ss.hasPermi('schoolJob:MyWork:list')")
+    @GetMapping("/selectScore")
+    public List selectScore(MyWork myWork)
+    {
+        return myWorkService.selectScore(myWork);
+    }
+
 }

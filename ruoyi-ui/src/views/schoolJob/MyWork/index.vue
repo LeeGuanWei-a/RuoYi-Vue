@@ -147,6 +147,10 @@
       @pagination="getList"
     />
 
+    <div style="width:600px;height:400px;">
+      <div id="myChart3" style="width:100%;height:278px;float:left;"></div>
+    </div>
+
     <!-- 添加或修改MyWork对话框 -->
     <el-dialog title="作品信息" :visible.sync="open" width="900px" append-to-body>
       <div class="block" style="margin-left:10px; margin-bottom: 25px">
@@ -192,13 +196,17 @@
 
 <script>
 import { getToken } from "@/utils/auth";
-import { listMyWork, getMyWork, delMyWork, addMyWork, updateMyWork, selectTitle} from "@/api/schoolJob/MyWork";
+import { listMyWork, getMyWork, delMyWork, addMyWork, updateMyWork, selectTitle, selectScore} from "@/api/schoolJob/MyWork";
 import {addInfo, getInfo} from "@/api/schoolJob/info";
 
 export default {
   name: "MyWork",
   data() {
     return {
+      myChart3: '',
+      opinion3: ['及格人数', '不及格人数'],
+      opinionData3: [],
+
       // 遮罩层
       loading: true,
       // 选中数组
@@ -261,11 +269,59 @@ export default {
     };
   },
   created() {
+    this.getScore();
     this.getList();
     this.selectTitle();
     this.userId = this.$store.state.user.userId;
   },
+  mounted: function () {
+    this.drawLine2()
+  },
   methods: {
+    drawLine2 () {
+      // console.log("开始画饼图")
+      // 基于准备好的dom，初始化echarts实例
+      this.myChart3 = this.$echarts.init(document.getElementById('myChart3'))
+      // 绘制图表
+      this.myChart3.setOption({
+        title: {
+          text: '课程设计作品成绩情况', // 主标题
+          subtext: '', // 副标题
+          x: 'left' // x轴方向对齐方式
+        },
+        tooltip: {
+          trigger: 'item',
+          formatter: '{a} <br/>{b} : {c} ({d}%)'
+        },
+        legend: {
+          orient: 'vertical',
+
+          bottom: 'bottom',
+          data: this.opinion3
+        },
+        series: [
+          {
+            name: '成绩数据',
+            type: 'pie',
+            radius: '50%',
+            center: ['50%', '50%'],
+            data: this.opinionData3,
+            itemStyle: {
+              emphasis: {
+                shadowBlur: 10,
+                shadowOffsetX: 0,
+                shadowColor: 'rgba(0, 0, 0, 0.5)'
+              },
+              color: function (params) {
+                // 自定义颜色
+                var colorList = ['red', '#1ab394']
+                return colorList[params.dataIndex]
+              }
+            }
+          }
+        ]
+      })
+    },
     //  选择题目
     handleChange(value) {
       //console.log(JSON.stringify(value));
@@ -298,6 +354,24 @@ export default {
         this.loading = false;
       });
     },
+    //分数情况
+    getScore(){
+      selectScore(this.queryParams).then((res) => {
+        var opinionData3 = [];
+        opinionData3.push(
+          {
+            value: parseInt(res[0].value),
+            name: res[0].name
+          },
+          {
+            value: parseInt(res[1].value),
+            name: res[1].name
+          });
+        this.opinionData3 = opinionData3;
+        console.log(JSON.stringify(this.opinionData3))
+      });
+    },
+
     async selectTitle(){
       let that = this;
       selectTitle().then((res) => {

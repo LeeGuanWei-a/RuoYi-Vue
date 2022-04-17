@@ -129,4 +129,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             ( #{item.titleId}, #{item.titleName}, #{item.description}, #{item.startTime}, #{item.endTime}, #{item.fileId}, #{item.classId})
         </foreach>
     </insert>
+
+    <select id="selectPass" resultType="java.lang.Integer">
+        SELECT
+        COUNT(*)
+        FROM
+        my_work
+        WHERE
+        score &gt;= 60
+    </select>
+
+    <select id="selectFailed" resultType="java.lang.Integer">
+        SELECT
+        COUNT(*)
+        FROM
+        my_work
+        WHERE
+        score &lt; 60
+    </select>
 </mapper>

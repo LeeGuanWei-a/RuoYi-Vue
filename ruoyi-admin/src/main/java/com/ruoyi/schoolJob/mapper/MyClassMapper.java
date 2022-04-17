@@ -92,6 +92,12 @@ public interface MyClassMapper
     public List<SysUser> getTeachers();
 
     /**
+     * 查询学生
+     * @return
+     */
+    public List<SysUser> getStudents();
+
+    /**
      * 查询教学班
      * @return
      */

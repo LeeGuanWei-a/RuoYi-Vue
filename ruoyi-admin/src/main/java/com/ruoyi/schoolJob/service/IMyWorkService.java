@@ -64,4 +64,12 @@ public interface IMyWorkService
      * @return
      */
     public List<Map<String,Object>> selectTitle();
+
+    /**
+     * 查询及格人数
+     * @param myWork
+     * @return
+     */
+    public List selectScore(MyWork myWork);
+
 }

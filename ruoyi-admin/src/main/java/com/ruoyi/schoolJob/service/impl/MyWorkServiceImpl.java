@@ -147,6 +147,28 @@ public class MyWorkServiceImpl implements IMyWorkService
     }
 
     /**
+     * 查询分数人数
+     * @param myWork
+     * @return
+     */
+    @Override
+    public List selectScore(MyWork myWork) {
+        List mapList = new ArrayList();
+        Map<String,String> map1 = new HashMap<>();
+        Map<String,String> map2 = new HashMap<>();
+        String pass = String.valueOf(myWorkMapper.selectPass(myWork));
+        String fail = String.valueOf(myWorkMapper.selectFailed(myWork));
+        map1.put("value", pass);
+        map1.put("name","及格人数");
+        map2.put("value",fail);
+        map2.put("name","不及格人数");
+        mapList.add(map1);
+        mapList.add(map2);
+        return mapList;
+    }
+
+
+    /**
      * 新增MyTitle信息
      * 
      * @param myWork MyWork对象

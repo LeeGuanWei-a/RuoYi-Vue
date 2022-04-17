@@ -82,4 +82,18 @@ public interface MyWorkMapper
      * @return 结果
      */
     public int deleteMyTitleByTitleId(Long workId);
+
+    /**
+     * 查询及格人数
+     * @param myWork
+     * @return
+     */
+    public int selectPass(MyWork myWork);
+
+    /**
+     * 查询不及格人数
+     * @param myWork
+     * @return
+     */
+    public int selectFailed(MyWork myWork);
 }

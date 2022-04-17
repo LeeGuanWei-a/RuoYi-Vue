@@ -102,12 +102,27 @@ public class MyClassController extends BaseController
         return toAjax(myClassService.deleteMyClassByClassIds(classIds));
     }
 
+    /**
+     * 查询所有教师
+     * @return
+     */
     @PreAuthorize("@ss.hasPermi('schoolJob:MyClass:teachers')")
     @GetMapping("/teachers")
     public List<SysUser> getTeacher()
     {
         List<SysUser> list = myClassService.getTeachers();
-        System.out.println("==" + list);
+        return list;
+    }
+
+    /**
+     * 查询所有学生
+     * @return
+     */
+    @PreAuthorize("@ss.hasPermi('schoolJob:MyClass:teachers')")
+    @GetMapping("/students")
+    public List<SysUser> getStudent()
+    {
+        List<SysUser> list = myClassService.getStudents();
         return list;
     }
 }

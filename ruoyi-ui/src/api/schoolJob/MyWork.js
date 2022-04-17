@@ -50,3 +50,13 @@ export function selectTitle(){
     method: 'get'
   })
 }
+
+// 查询作品分数人数
+export function selectScore(query) {
+  return request({
+    url: '/schoolJob/MyWork/selectScore',
+    method: 'get',
+    params: query
+  })
+}
+
