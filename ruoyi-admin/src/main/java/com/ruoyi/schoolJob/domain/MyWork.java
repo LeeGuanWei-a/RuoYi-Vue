@@ -25,9 +25,17 @@ public class MyWork extends BaseEntity
     @Excel(name = "学生Id")
     private Long userId;
 
+    private String nickName;
+
     /** 题目Id */
     @Excel(name = "题目Id")
     private Long titleId;
+
+    private String titleName;
+
+    private Long classId;
+
+    private String classCode;
 
     /** 作品分数 */
     @Excel(name = "作品分数")
@@ -37,10 +45,35 @@ public class MyWork extends BaseEntity
     @Excel(name = "文件上传")
     private String upload;
 
+
     /** MyTitle信息 */
     private List<MyTitle> myTitleList;
 
-    public void setWorkId(Long workId) 
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
+
+    public Long getClassId() {
+        return classId;
+    }
+
+    public void setClassId(Long classId) {
+        this.classId = classId;
+    }
+
+    public String getClassCode() {
+        return classCode;
+    }
+
+    public void setClassCode(String classCode) {
+        this.classCode = classCode;
+    }
+
+    public void setWorkId(Long workId)
     {
         this.workId = workId;
     }
@@ -81,7 +114,15 @@ public class MyWork extends BaseEntity
         this.score = score;
     }
 
-    public Long getScore() 
+    public String getTitleName() {
+        return titleName;
+    }
+
+    public void setTitleName(String titleName) {
+        this.titleName = titleName;
+    }
+
+    public Long getScore()
     {
         return score;
     }

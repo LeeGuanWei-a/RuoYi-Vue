@@ -137,4 +137,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         WHERE
             r.role_id = 2
     </select>
+
+    <select id="selectAllClass" resultType="java.util.Map">
+        SELECT class_id as classId ,class_code as classCode FROM my_class
+    </select>
+
+    <select id="selectClass" resultType="java.util.Map">
+        SELECT class_id as classId ,class_code as classCode FROM my_class
+    </select>
 </mapper>

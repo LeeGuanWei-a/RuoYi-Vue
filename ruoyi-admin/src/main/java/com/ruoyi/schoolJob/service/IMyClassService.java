@@ -64,4 +64,9 @@ public interface IMyClassService
      * @return
      */
     public List<SysUser> getTeachers();
+
+    /**
+     * 查询教学班列表
+     */
+    public List<MyClass> selectAllClass();
 }

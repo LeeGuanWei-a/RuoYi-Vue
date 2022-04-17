@@ -1,6 +1,8 @@
 package com.ruoyi.schoolJob.mapper;
 
 import java.util.List;
+import java.util.Map;
+
 import com.ruoyi.schoolJob.domain.MyTitle;
 import com.ruoyi.schoolJob.domain.MyClass;
 
@@ -82,4 +84,11 @@ public interface MyTitleMapper
      * @return 结果
      */
     public int deleteMyClassByClassId(Long titleId);
+
+    /**
+     * 根据教学班ID查询题目
+     * @param classId
+     * @return
+     */
+    public List<Map<String,Object>> selectTitleByClassId(Long classId);
 }

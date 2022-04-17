@@ -8,9 +8,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="workId"    column="work_id"    />
         <result property="workName"    column="work_name"    />
         <result property="userId"    column="user_id"    />
+        <result property="nickName"    column="nick_name"    />
         <result property="titleId"    column="title_id"    />
+        <result property="titleName"    column="title_name"    />
         <result property="score"    column="score"    />
         <result property="upload"    column="upload"    />
+        <result property="classId"    column="class_id"    />
+        <result property="classCode"    column="class_code"    />
     </resultMap>
 
     <resultMap id="MyWorkMyTitleResult" type="MyWork" extends="MyWorkResult">
@@ -18,27 +22,37 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <resultMap type="MyTitle" id="MyTitleResult">
-        <result property="titleId"    column="sub_title_id"    />
-        <result property="titleName"    column="sub_title_name"    />
-        <result property="description"    column="sub_description"    />
-        <result property="startTime"    column="sub_start_time"    />
-        <result property="endTime"    column="sub_end_time"    />
-        <result property="upload"    column="sub_upload"    />
-        <result property="classId"    column="sub_class_id"    />
+        <result property="titleId"    column="title_id"    />
+        <result property="titleName"    column="title_name"    />
+        <result property="description"    column="description"    />
+        <result property="startTime"    column="start_time"    />
+        <result property="endTime"    column="end_time"    />
+        <result property="classId"    column="class_id"    />
+        <result property="classCode"    column="class_code"    />
     </resultMap>
 
     <sql id="selectMyWorkVo">
-        select work_id, work_name, user_id, title_id, score, upload from my_work
+        SELECT
+            w.work_id,
+            w.work_name,
+            w.score,
+            t.title_id,
+            t.title_name,
+            u.user_id,
+            u.nick_name,
+            c.class_id,
+            c.class_code
+        FROM
+            my_work w
+                LEFT JOIN my_title t ON w.title_id = t.title_id
+                LEFT JOIN sys_user u ON w.user_id = u.user_id
+                LEFT JOIN my_class c ON t.class_id = c.class_id
     </sql>
 
     <select id="selectMyWorkList" parameterType="MyWork" resultMap="MyWorkResult">
         <include refid="selectMyWorkVo"/>
         <where>  
-            <if test="workName != null  and workName != ''"> and work_name like concat('%', #{workName}, '%')</if>
-            <if test="userId != null "> and user_id = #{userId}</if>
-            <if test="titleId != null "> and title_id = #{titleId}</if>
-            <if test="score != null "> and score = #{score}</if>
-            <if test="upload != null  and upload != ''"> and upload = #{upload}</if>
+            <if test="workName != null  and workName != ''"> and w.work_name like concat('%', #{workName}, '%')</if>
         </where>
     </select>
     

@@ -1,7 +1,11 @@
 package com.ruoyi.schoolJob.controller;
 
 import java.util.List;
+import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.schoolJob.domain.MyClass;
+import com.ruoyi.schoolJob.service.IMyClassService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,6 +35,7 @@ public class MyWorkController extends BaseController
 {
     @Autowired
     private IMyWorkService myWorkService;
+
 
     /**
      * 查询MyWork列表
@@ -98,5 +103,17 @@ public class MyWorkController extends BaseController
     public AjaxResult remove(@PathVariable Long[] workIds)
     {
         return toAjax(myWorkService.deleteMyWorkByWorkIds(workIds));
+    }
+
+
+    /**
+     * 查询教学班题目
+     * @return
+     */
+    @PreAuthorize("@ss.hasPermi('schoolJob:MyWork:list')")
+    @GetMapping("/selectTitle")
+    public List<Map<String,Object>> selectTitle()
+    {
+        return myWorkService.selectTitle();
     }
 }

@@ -10,22 +10,30 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="description"    column="description"    />
         <result property="startTime"    column="start_time"    />
         <result property="endTime"    column="end_time"    />
-        <result property="upload"    column="upload"    />
+        <result property="fileId"    column="file_id"    />
         <result property="classId"    column="class_id"    />
+        <result property="classCode"    column="class_code"    />
     </resultMap>
 
     <resultMap id="MyTitleMyClassResult" type="MyTitle" extends="MyTitleResult">
-        <collection property="myClassList" notNullColumn="sub_class_id" javaType="java.util.List" resultMap="MyClassResult" />
+        <collection property="myClassList" notNullColumn="class_id" javaType="java.util.List" resultMap="MyClassResult" />
     </resultMap>
 
     <resultMap type="MyClass" id="MyClassResult">
-        <result property="classId"    column="sub_class_id"    />
-        <result property="className"    column="sub_class_name"    />
-        <result property="userId"    column="sub_user_id"    />
+        <result property="classId"    column="class_id"    />
+        <result property="className"    column="class_name"    />
+        <result property="userId"    column="user_id"    />
     </resultMap>
 
     <sql id="selectMyTitleVo">
-        select title_id, title_name, description, start_time, end_time, upload, class_id from my_title
+        SELECT
+            t.*,c.class_code
+        FROM
+            my_title t
+                LEFT JOIN
+            my_class c
+            on
+                t.class_id = c.class_id
     </sql>
 
     <select id="selectMyTitleList" parameterType="MyTitle" resultMap="MyTitleResult">
@@ -35,16 +43,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="description != null  and description != ''"> and description = #{description}</if>
             <if test="startTime != null "> and start_time = #{startTime}</if>
             <if test="endTime != null "> and end_time = #{endTime}</if>
-            <if test="upload != null  and upload != ''"> and upload = #{upload}</if>
+            <if test="fileId != null  and fileId != ''"> and fileId = #{fileId}</if>
             <if test="classId != null "> and class_id = #{classId}</if>
         </where>
     </select>
     
     <select id="selectMyTitleByTitleId" parameterType="Long" resultMap="MyTitleMyClassResult">
-        select a.title_id, a.title_name, a.description, a.start_time, a.end_time, a.upload, a.class_id,
- b.class_id as sub_class_id, b.class_name as sub_class_name, b.user_id as sub_user_id
-        from my_title a
-        left join my_class b on b.class_id = a.title_id
+        SELECT
+            a.*, b.*
+        FROM
+            my_title a
+                LEFT JOIN my_class b ON b.class_id = a.class_id
         where a.title_id = #{titleId}
     </select>
         
@@ -56,7 +65,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="description != null">description,</if>
             <if test="startTime != null">start_time,</if>
             <if test="endTime != null">end_time,</if>
-            <if test="upload != null">upload,</if>
+            <if test="fileId != null">file_id,</if>
             <if test="classId != null">class_id,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -65,7 +74,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="description != null">#{description},</if>
             <if test="startTime != null">#{startTime},</if>
             <if test="endTime != null">#{endTime},</if>
-            <if test="upload != null">#{upload},</if>
+            <if test="fileId != null">#{fileId},</if>
             <if test="classId != null">#{classId},</if>
          </trim>
     </insert>
@@ -77,7 +86,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="description != null">description = #{description},</if>
             <if test="startTime != null">start_time = #{startTime},</if>
             <if test="endTime != null">end_time = #{endTime},</if>
-            <if test="upload != null">upload = #{upload},</if>
+            <if test="fileId != null">file_id = #{fileId},</if>
             <if test="classId != null">class_id = #{classId},</if>
         </trim>
         where title_id = #{titleId}
@@ -111,4 +120,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             ( #{item.classId}, #{item.className}, #{item.userId})
         </foreach>
     </insert>
+
+    <select id="selectTitleByClassId" resultType="java.util.Map">
+        SELECT title_id,title_name FROM my_title WHERE class_id = #{classId}
+    </select>
 </mapper>

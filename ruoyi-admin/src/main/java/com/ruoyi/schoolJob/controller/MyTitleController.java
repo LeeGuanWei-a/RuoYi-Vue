@@ -2,6 +2,9 @@ package com.ruoyi.schoolJob.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.schoolJob.domain.MyClass;
+import com.ruoyi.schoolJob.service.IMyClassService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,6 +34,8 @@ public class MyTitleController extends BaseController
 {
     @Autowired
     private IMyTitleService myTitleService;
+    @Autowired
+    private IMyClassService myClassService;
 
     /**
      * 查询MyTitle列表
@@ -98,5 +103,16 @@ public class MyTitleController extends BaseController
     public AjaxResult remove(@PathVariable Long[] titleIds)
     {
         return toAjax(myTitleService.deleteMyTitleByTitleIds(titleIds));
+    }
+
+    /**
+     * 查询MyClass列表
+     */
+    @PreAuthorize("@ss.hasPermi('schoolJob:MyClass:list')")
+    @GetMapping("/classList")
+    public List<MyClass> list()
+    {
+        List<MyClass> list = myClassService.selectAllClass();
+        return list;
     }
 }

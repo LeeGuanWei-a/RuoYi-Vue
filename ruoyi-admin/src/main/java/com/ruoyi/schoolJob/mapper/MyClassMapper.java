@@ -1,6 +1,7 @@
 package com.ruoyi.schoolJob.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.schoolJob.domain.MyClass;
@@ -89,4 +90,16 @@ public interface MyClassMapper
      * @return
      */
     public List<SysUser> getTeachers();
+
+    /**
+     * 查询教学班
+     * @return
+     */
+    public List<MyClass> selectAllClass();
+
+    /**
+     * 查询教学班
+     * @return
+     */
+    public List<Map<String,Object>> selectClass();
 }

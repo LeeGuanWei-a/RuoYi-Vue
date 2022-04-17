@@ -1,6 +1,15 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
+    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="80px">
+      <el-form-item label="教学班" prop="className">
+        <el-input
+          v-model="queryParams.className"
+          placeholder="请输入教学班"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <el-form-item label="作品名称" prop="workName">
         <el-input
           v-model="queryParams.workName"
@@ -23,15 +32,6 @@
         <el-input
           v-model="queryParams.titleName"
           placeholder="请输入题目名称"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="作品分数" prop="score">
-        <el-input
-          v-model="queryParams.score"
-          placeholder="请输入作品分数"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -89,39 +89,24 @@
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
+<!--    列表-->
     <el-table v-loading="loading" :data="MyWorkList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="作品序号" align="center" prop="workId" />
-      <el-table-column label="作品名称" align="center" prop="workName">
-        <template slot-scope="scope">
-<!--          <dict-tag :options="dict.type.sys_work" :value="scope.row.workName"/>-->
-          <dict-tag :value="scope.row.workName"/>
-        </template>
-      </el-table-column>
-      <el-table-column label="学生Id" align="center" prop="userId">
-        <template slot-scope="scope">
-<!--          <dict-tag :options="dict.type.sys_work" :value="scope.row.userId"/>-->
-          <dict-tag :value="scope.row.userId"/>
-        </template>
-      </el-table-column>
-      <el-table-column label="题目Id" align="center" prop="titleId">
-        <template slot-scope="scope">
-<!--          <dict-tag :options="dict.type.sys_work" :value="scope.row.titleId"/>-->
-          <dict-tag :value="scope.row.titleId"/>
-        </template>
-      </el-table-column>
-      <el-table-column label="作品分数" align="center" prop="score">
-        <template slot-scope="scope">
-<!--          <dict-tag :options="dict.type.sys_work" :value="scope.row.score"/>-->
-          <dict-tag :value="scope.row.score"/>
-        </template>
-      </el-table-column>
-      <el-table-column label="文件上传" align="center" prop="upload">
-        <template slot-scope="scope">
-<!--          <dict-tag :options="dict.type.sys_work" :value="scope.row.upload"/>-->
-          <dict-tag :value="scope.row.upload"/>
-        </template>
-      </el-table-column>
+      <el-table-column label="作品序号" v-if="false" align="center" prop="workId" />
+      <el-table-column label="教学班" align="center" prop="classCode"/>
+      <el-table-column label="题目名称" align="center" prop="titleName"/>
+      <el-table-column label="作品名称" align="center" prop="workName"/>
+      <el-table-column label="学生名称" align="center" prop="nickName"/>
+      <el-table-column label="作品分数" align="center" prop="score"/>
+<!--      <el-table-column label="文件下载" align="center" prop="fileId">-->
+<!--        <el-button-->
+<!--          size="mini"-->
+<!--          type="text"-->
+<!--          icon="el-icon-edit"-->
+<!--          @click="handleDownload(scope.row)"-->
+<!--        >下载</el-button>-->
+<!--      </el-table-column>-->
+
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -152,66 +137,39 @@
 
     <!-- 添加或修改MyWork对话框 -->
     <el-dialog title="作品信息" :visible.sync="open" width="900px" append-to-body>
+      <div class="block" style="margin-left:10px; margin-bottom: 25px">
+        <span class="demonstration" style="font-weight: bolder;margin-right: 15px">题目名称</span>
+        <el-cascader
+          v-model="form.titleId"
+          :options="options"
+          :props="{value:'id', label: 'name', children: 'children'}"
+          clearable
+          filterable
+          @change="handleChange"/>
+      </div>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="作品名称" prop="workName">
           <el-input v-model="form.workName" placeholder="请输入作品名称" />
         </el-form-item>
-        <el-form-item label="学生Id" prop="userId">
-          <el-input v-model="form.userId" placeholder="请输入学生Id" />
-        </el-form-item>
-        <el-form-item label="题目Id" prop="titleId">
-          <el-input v-model="form.titleId" placeholder="请输入题目Id" />
+        <el-form-item label="文件上传" prop="fileId">
+          <el-upload
+            ref="upload"
+            :limit="1"
+            :action="upload.url"
+            :headers="upload.headers"
+            :file-list="upload.fileList"
+            :on-progress="handleFileUploadProgress"
+            :on-success="handleFileSuccess"
+            :auto-upload="false">
+            <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+            <el-button style="margin-left: 10px;" size="small" type="success" :loading="upload.isUploading" @click="submitUpload">上传到服务器</el-button>
+
+          </el-upload>
         </el-form-item>
         <el-form-item label="作品分数" prop="score">
           <el-input v-model="form.score" placeholder="请输入作品分数" />
         </el-form-item>
-        <el-form-item label="文件上传" prop="upload">
-          <el-input v-model="form.upload" placeholder="请输入文件上传" />
-        </el-form-item>
-        <el-divider content-position="center">MyTitle信息</el-divider>
-        <el-row :gutter="10" class="mb8">
-          <el-col :span="1.5">
-            <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAddMyTitle">添加</el-button>
-          </el-col>
-          <el-col :span="1.5">
-            <el-button type="danger" icon="el-icon-delete" size="mini" @click="handleDeleteMyTitle">删除</el-button>
-          </el-col>
-        </el-row>
-        <el-table :data="myTitleList" :row-class-name="rowMyTitleIndex" @selection-change="handleMyTitleSelectionChange" ref="myTitle">
-          <el-table-column type="selection" width="50" align="center" />
-          <el-table-column label="序号" align="center" prop="index" width="50"/>
-          <el-table-column label="题目名称" prop="titleName">
-            <template slot-scope="scope">
-              <el-input v-model="scope.row.titleName" placeholder="请输入题目名称" />
-            </template>
-          </el-table-column>
-          <el-table-column label="描述" prop="description">
-            <template slot-scope="scope">
-              <el-input v-model="scope.row.description" placeholder="请输入描述" />
-            </template>
-          </el-table-column>
-          <el-table-column label="开始时间" prop="startTime">
-            <template slot-scope="scope">
-              <el-input v-model="scope.row.startTime" placeholder="请输入开始时间" />
-            </template>
-          </el-table-column>
-          <el-table-column label="结束时间" prop="endTime">
-            <template slot-scope="scope">
-              <el-input v-model="scope.row.endTime" placeholder="请输入结束时间" />
-            </template>
-          </el-table-column>
-          <el-table-column label="文件路径" prop="upload">
-            <template slot-scope="scope">
-              <el-input v-model="scope.row.upload" placeholder="请输入文件路径" />
-            </template>
-          </el-table-column>
-          <el-table-column label="教学班Id" prop="classId">
-            <template slot-scope="scope">
-              <el-input v-model="scope.row.classId" placeholder="请输入教学班Id" />
-            </template>
-          </el-table-column>
-        </el-table>
-      </el-form>
+       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
@@ -221,7 +179,8 @@
 </template>
 
 <script>
-import { listMyWork, getMyWork, delMyWork, addMyWork, updateMyWork } from "@/api/schoolJob/MyWork";
+import { getToken } from "@/utils/auth";
+import { listMyWork, getMyWork, delMyWork, addMyWork, updateMyWork, selectTitle} from "@/api/schoolJob/MyWork";
 
 export default {
   name: "MyWork",
@@ -263,20 +222,63 @@ export default {
       form: {},
       // 表单校验
       rules: {
-      }
+      },
+      // 上传参数
+      upload: {
+        // 是否禁用上传
+        isUploading: false,
+        // 设置上传的请求头部
+        headers: { Authorization: "Bearer " + getToken() },
+        // 上传的地址
+        url: process.env.VUE_APP_BASE_API + "/common/upload",
+        // 上传的文件列表
+        fileList: []
+      },
+      options: [],
+      userId: '',
     };
   },
   created() {
     this.getList();
+    this.selectTitle();
+    this.userId = this.$store.state.user.userId;
   },
   methods: {
+    //  选择题目
+    handleChange(value) {
+      console.log(JSON.stringify(value));
+    },
+    // 文件下载处理
+    handleDownload(row) {
+      var name = row.fileName;
+      var url = row.filePath;
+      var suffix = url.substring(url.lastIndexOf("."), url.length);
+      const a = document.createElement('a')
+      a.setAttribute('download', name + suffix)
+      a.setAttribute('target', '_blank')
+      a.setAttribute('href', url)
+      a.click()
+    },
     /** 查询MyWork列表 */
     getList() {
       this.loading = true;
-      listMyWork(this.queryParams).then(response => {
-        this.MyWorkList = response.rows;
-        this.total = response.total;
+      listMyWork(this.queryParams).then(res => {
+        console.log(JSON.stringify(res))
+        this.MyWorkList = res.rows;
+        this.total = res.total;
         this.loading = false;
+        console.log("==" +  JSON.stringify(this.MyWorkList))
+      });
+    },
+    async selectTitle(){
+      let that = this;
+      selectTitle().then((res) => {
+        console.log(JSON.stringify(res))
+        if (res !== null){
+          that.options = res;
+        }
+      }).catch((err) => {
+        console.log(err);
       });
     },
     // 取消按钮
@@ -317,7 +319,8 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加MyWork";
+      this.title = "添加作品";
+      this.upload.fileList = [];
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -327,21 +330,28 @@ export default {
         this.form = response.data;
         this.myTitleList = response.data.myTitleList;
         this.open = true;
-        this.title = "修改MyWork";
+        this.title = "修改作品";
+        this.upload.fileList = [{ name: this.form.fileName, url: this.form.filePath }];
       });
     },
     /** 提交按钮 */
     submitForm() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          this.form.myTitleList = this.myTitleList;
           if (this.form.workId != null) {
+            this.form.myTitleList = this.myTitleList;
+            this.form.titleId = this.form.titleId[1];
+            console.log(JSON.stringify(this.form.titleId))
             updateMyWork(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
+            this.form.myTitleList = this.myTitleList;
+            this.form.userId = this.userId;
+            this.form.titleId = this.form.titleId[1];
+            console.log(JSON.stringify(this.form.titleId))
             addMyWork(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
@@ -351,10 +361,25 @@ export default {
         }
       });
     },
+
+    // 文件提交处理
+    submitUpload() {
+      this.$refs.upload.submit();
+    },
+    // 文件上传中处理
+    handleFileUploadProgress(event, file, fileList) {
+      this.upload.isUploading = true;
+    },
+    // 文件上传成功处理
+    handleFileSuccess(response, file, fileList) {
+      this.upload.isUploading = false;
+      this.form.filePath = response.url;
+      this.msgSuccess(response.msg);
+    },
     /** 删除按钮操作 */
     handleDelete(row) {
       const workIds = row.workId || this.ids;
-      this.$modal.confirm('是否确认删除MyWork编号为"' + workIds + '"的数据项？').then(function() {
+      this.$modal.confirm('是否确认删除选择的作品').then(function() {
         return delMyWork(workIds);
       }).then(() => {
         this.getList();
@@ -379,7 +404,7 @@ export default {
     /** MyTitle删除按钮操作 */
     handleDeleteMyTitle() {
       if (this.checkedMyTitle.length == 0) {
-        this.$modal.msgError("请先选择要删除的MyTitle数据");
+        this.$modal.msgError("请先选择要删除作品");
       } else {
         const myTitleList = this.myTitleList;
         const checkedMyTitle = this.checkedMyTitle;

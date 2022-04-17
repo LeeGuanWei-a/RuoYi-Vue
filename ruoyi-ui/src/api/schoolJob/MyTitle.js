@@ -42,3 +42,11 @@ export function delMyTitle(titleId) {
     method: 'delete'
   })
 }
+
+//查询教学班
+export function listMyClass() {
+  return request({
+    url: '/schoolJob/MyTitle/classList',
+    method: 'get',
+  })
+}

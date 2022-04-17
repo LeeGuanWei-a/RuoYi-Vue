@@ -35,10 +35,10 @@
           placeholder="选择结束时间">
         </el-date-picker>
       </el-form-item>
-      <el-form-item label="教学班" prop="className">
+      <el-form-item label="教学班" prop="classCode">
         <el-input
-          v-model="queryParams.className"
-          placeholder="请输入教学班名称"
+          v-model="queryParams.classCode"
+          placeholder="请输入教学班编号"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -99,6 +99,7 @@
     <el-table v-loading="loading" :data="MyTitleList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="题目序号" v-if="false" align="center" prop="titleId" />
+      <el-table-column label="教学班编号" align="center" prop="classCode" />
       <el-table-column label="题目名称" align="center" prop="titleName" />
       <el-table-column label="描述" align="center" prop="description" />
       <el-table-column label="开始时间" align="center" prop="startTime" width="180">
@@ -111,8 +112,15 @@
           <span>{{ parseTime(scope.row.endTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="文件路径" align="center" prop="upload" />
-      <el-table-column label="教学班Id" align="center" prop="classId" />
+      <el-table-column label="文件下载" align="center" prop="fileId">
+        <el-button
+          size="mini"
+          type="text"
+          icon="el-icon-edit"
+          @click="handleDownload(scope.row)"
+        >下载</el-button>
+      </el-table-column>
+<!--      <el-table-column label="教学班Id" align="center" prop="classId" />-->
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -143,6 +151,16 @@
     <!-- 添加或修改MyTitle对话框 -->
     <el-dialog title="题目信息" :visible.sync="open" width="900px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+        <el-form-item label="教学班" prop="className">
+          <el-select v-model="form.classId" filterable clearable placeholder="请选择教学班">
+            <el-option
+              v-for="item in classList"
+              :key="item.classId"
+              :label="item.classCode"
+              :value="item.classId">
+            </el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="题目名称" prop="titleName">
           <el-input v-model="form.titleName" placeholder="请输入题目名称" />
         </el-form-item>
@@ -168,42 +186,47 @@
 <!--        <el-form-item label="文件路径" prop="upload">-->
 <!--          <el-input v-model="form.upload" placeholder="请输入文件路径" />-->
 <!--        </el-form-item>-->
-        <el-form-item label="文件上传" prop="upload">
+        <el-form-item label="文件上传" prop="fileId">
           <el-upload
-            class="upload-demo"
-            drag
-            action="https://jsonplaceholder.typicode.com/posts/"
-            multiple>
-            <i class="el-icon-upload"></i>
-            <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+            ref="upload"
+            :limit="1"
+            :action="upload.url"
+            :headers="upload.headers"
+            :file-list="upload.fileList"
+            :on-progress="handleFileUploadProgress"
+            :on-success="handleFileSuccess"
+            :auto-upload="false">
+            <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+            <el-button style="margin-left: 10px;" size="small" type="success" :loading="upload.isUploading" @click="submitUpload">上传到服务器</el-button>
+
           </el-upload>
         </el-form-item>
-        <el-form-item label="教学班Id" prop="classId">
-          <el-input v-model="form.classId" placeholder="请输入教学班Id" />
-        </el-form-item>
-        <el-divider content-position="center">MyClass信息</el-divider>
-        <el-row :gutter="10" class="mb8">
-          <el-col :span="1.5">
-            <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAddMyClass">添加</el-button>
-          </el-col>
-          <el-col :span="1.5">
-            <el-button type="danger" icon="el-icon-delete" size="mini" @click="handleDeleteMyClass">删除</el-button>
-          </el-col>
-        </el-row>
-        <el-table :data="myClassList" :row-class-name="rowMyClassIndex" @selection-change="handleMyClassSelectionChange" ref="myClass">
-          <el-table-column type="selection" width="50" align="center" />
-          <el-table-column label="序号" align="center" prop="index" width="50"/>
-          <el-table-column label="教学班名称" prop="className">
-            <template slot-scope="scope">
-              <el-input v-model="scope.row.className" placeholder="请输入教学班名称" />
-            </template>
-          </el-table-column>
-          <el-table-column label="教师Id" prop="userId">
-            <template slot-scope="scope">
-              <el-input v-model="scope.row.userId" placeholder="请输入教师Id" />
-            </template>
-          </el-table-column>
-        </el-table>
+<!--        <el-form-item label="教学班Id" prop="classId">-->
+<!--          <el-input v-model="form.classId" placeholder="请输入教学班Id" />-->
+<!--        </el-form-item>-->
+<!--        <el-divider content-position="center">教学班信息</el-divider>-->
+<!--        <el-row :gutter="10" class="mb8">-->
+<!--          <el-col :span="1.5">-->
+<!--            <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAddMyClass">添加</el-button>-->
+<!--          </el-col>-->
+<!--          <el-col :span="1.5">-->
+<!--            <el-button type="danger" icon="el-icon-delete" size="mini" @click="handleDeleteMyClass">删除</el-button>-->
+<!--          </el-col>-->
+<!--        </el-row>-->
+<!--        <el-table :data="myClassList" :row-class-name="rowMyClassIndex" @selection-change="handleMyClassSelectionChange" ref="myClass">-->
+<!--          <el-table-column type="selection" width="50" align="center" />-->
+<!--          <el-table-column label="序号" align="center" prop="index" width="50"/>-->
+<!--          <el-table-column label="教学班名称" prop="className">-->
+<!--            <template slot-scope="scope">-->
+<!--              <el-input v-model="scope.row.className" placeholder="请输入教学班名称" />-->
+<!--            </template>-->
+<!--          </el-table-column>-->
+<!--          <el-table-column label="教师Id" prop="userId">-->
+<!--            <template slot-scope="scope">-->
+<!--              <el-input v-model="scope.row.userId" placeholder="请输入教师Id" />-->
+<!--            </template>-->
+<!--          </el-table-column>-->
+<!--        </el-table>-->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -214,12 +237,15 @@
 </template>
 
 <script>
-import { listMyTitle, getMyTitle, delMyTitle, addMyTitle, updateMyTitle } from "@/api/schoolJob/MyTitle";
+import { getToken } from "@/utils/auth";
+import { listMyTitle, getMyTitle, delMyTitle, addMyTitle, updateMyTitle, listMyClass} from "@/api/schoolJob/MyTitle";
 
 export default {
   name: "MyTitle",
   data() {
     return {
+      //教学班列表
+      classList:[],
       // 遮罩层
       loading: true,
       // 选中数组
@@ -257,13 +283,38 @@ export default {
       form: {},
       // 表单校验
       rules: {
-      }
+      },
+      // 上传参数
+      upload: {
+        // 是否禁用上传
+        isUploading: false,
+        // 设置上传的请求头部
+        headers: { Authorization: "Bearer " + getToken() },
+        // 上传的地址
+        url: process.env.VUE_APP_BASE_API + "/common/upload",
+        // 上传的文件列表
+        fileList: [],
+      },
+      userId: '',
     };
   },
   created() {
     this.getList();
+    this.listMyClass();
+    this.userId = this.$store.state.user.userId;
   },
   methods: {
+    // 文件下载处理
+    handleDownload(row) {
+      var name = row.fileName;
+      var url = row.filePath;
+      var suffix = url.substring(url.lastIndexOf("."), url.length);
+      const a = document.createElement('a')
+      a.setAttribute('download', name + suffix)
+      a.setAttribute('target', '_blank')
+      a.setAttribute('href', url)
+      a.click()
+    },
     /** 查询MyTitle列表 */
     getList() {
       this.loading = true;
@@ -309,21 +360,31 @@ export default {
       this.single = selection.length!==1
       this.multiple = !selection.length
     },
+    // 查询教学班
+    listMyClass(){
+      listMyClass().then((res) => {
+        console.log(JSON.stringify(res))
+        this.classList = res;
+      })
+    },
     /** 新增按钮操作 */
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加MyTitle";
+      this.title = "添加题目";
+      this.upload.fileList = [];
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
       const titleId = row.titleId || this.ids
       getMyTitle(titleId).then(response => {
+        console.log(JSON.stringify(response))
         this.form = response.data;
         this.myClassList = response.data.myClassList;
         this.open = true;
-        this.title = "修改MyTitle";
+        this.title = "修改题目";
+        this.upload.fileList = [{ name: this.form.fileName, url: this.form.filePath }];
       });
     },
     /** 提交按钮 */
@@ -347,10 +408,26 @@ export default {
         }
       });
     },
+
+    // 文件提交处理
+    submitUpload() {
+      this.$refs.upload.submit();
+    },
+    // 文件上传中处理
+    handleFileUploadProgress(event, file, fileList) {
+      this.upload.isUploading = true;
+    },
+    // 文件上传成功处理
+    handleFileSuccess(response, file, fileList) {
+      this.upload.isUploading = false;
+      this.form.filePath = response.url;
+      this.msgSuccess(response.msg);
+    },
+
     /** 删除按钮操作 */
     handleDelete(row) {
       const titleIds = row.titleId || this.ids;
-      this.$modal.confirm('是否确认删除MyTitle编号为"' + titleIds + '"的数据项？').then(function() {
+      this.$modal.confirm('是否确认删除选择的题目').then(function() {
         return delMyTitle(titleIds);
       }).then(() => {
         this.getList();
@@ -371,7 +448,7 @@ export default {
     /** MyClass删除按钮操作 */
     handleDeleteMyClass() {
       if (this.checkedMyClass.length == 0) {
-        this.$modal.msgError("请先选择要删除的MyClass数据");
+        this.$modal.msgError("请先选择要删除题目");
       } else {
         const myClassList = this.myClassList;
         const checkedMyClass = this.checkedMyClass;

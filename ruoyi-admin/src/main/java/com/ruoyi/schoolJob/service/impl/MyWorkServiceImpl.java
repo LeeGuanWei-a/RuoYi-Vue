@@ -1,9 +1,15 @@
 package com.ruoyi.schoolJob.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
+
+import com.ruoyi.schoolJob.mapper.MyClassMapper;
+import com.ruoyi.schoolJob.mapper.MyTitleMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
+import java.util.Map;
+
 import com.ruoyi.common.utils.StringUtils;
 import org.springframework.transaction.annotation.Transactional;
 import com.ruoyi.schoolJob.domain.MyTitle;
@@ -20,6 +26,10 @@ public class MyWorkServiceImpl implements IMyWorkService
 {
     @Autowired
     private MyWorkMapper myWorkMapper;
+    @Autowired
+    private MyClassMapper myClassMapper;
+    @Autowired
+    private MyTitleMapper myTitleMapper;
 
     /**
      * 查询MyWork
@@ -104,6 +114,39 @@ public class MyWorkServiceImpl implements IMyWorkService
     }
 
     /**
+     * 查询教学班题目
+     * @return
+     */
+    @Override
+    public List<Map<String, Object>> selectTitle() {
+        List<Map<String,Object>> myClass = myClassMapper.selectClass();
+        List<Map<String,Object>> childClass = new ArrayList<>();
+        System.out.println("myclass=" + myClass.toString());
+        for (int i = 0; i < myClass.size(); i++){
+            Map<String,Object> mapClass = new HashMap<>();
+            List<Map<String,Object>> childTitle = new ArrayList<>();
+            mapClass.put("id",myClass.get(i).get("classId").toString());
+            mapClass.put("name",myClass.get(i).get("classCode"));
+
+            Long classId = (Long) myClass.get(i).get("classId");
+            List<Map<String,Object>> myTitle = myTitleMapper.selectTitleByClassId(classId);
+
+            for (int j = 0; j < myTitle.size(); j++){
+                String title_id = myTitle.get(j).get("title_id").toString();
+                String title_name = myTitle.get(j).get("title_name").toString();
+                Map<String,Object> map = new HashMap<>();
+                map.put("id", title_id);
+                map.put("name", title_name);
+                childTitle.add(map);
+                mapClass.put("children",childTitle);
+            }
+            childClass.add(mapClass);
+        }
+        System.out.println(childClass.toString());
+        return childClass;
+    }
+
+    /**
      * 新增MyTitle信息
      * 
      * @param myWork MyWork对象
@@ -126,4 +169,6 @@ public class MyWorkServiceImpl implements IMyWorkService
             }
         }
     }
+
+
 }

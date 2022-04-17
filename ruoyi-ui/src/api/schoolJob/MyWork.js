@@ -42,3 +42,11 @@ export function delMyWork(workId) {
     method: 'delete'
   })
 }
+
+//查询教学班题目关联
+export function selectTitle(){
+  return request({
+    url: '/schoolJob/MyWork/selectTitle',
+    method: 'get'
+  })
+}

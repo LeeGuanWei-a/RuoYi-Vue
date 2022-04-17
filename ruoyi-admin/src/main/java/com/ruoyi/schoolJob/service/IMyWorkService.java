@@ -1,6 +1,8 @@
 package com.ruoyi.schoolJob.service;
 
 import java.util.List;
+import java.util.Map;
+
 import com.ruoyi.schoolJob.domain.MyWork;
 
 /**
@@ -56,4 +58,10 @@ public interface IMyWorkService
      * @return 结果
      */
     public int deleteMyWorkByWorkId(Long workId);
+
+    /**
+     * 查询教学班题目
+     * @return
+     */
+    public List<Map<String,Object>> selectTitle();
 }

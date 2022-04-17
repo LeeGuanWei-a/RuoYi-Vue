@@ -129,7 +129,7 @@
 <!--          <el-input v-model="form.userId" placeholder="请输入教师名称" />-->
 <!--        </el-form-item>-->
         <el-form-item label="教师名称" prop="userId">
-        <el-select v-model="form.userId" label="教师名称" filterable placeholder="请输入教师名称">
+        <el-select v-model="form.userId" label="教师名称" filterable clearable placeholder="请输入教师名称">
             <el-option
               v-for="item in options"
               :key="item.user_id"
@@ -217,13 +217,14 @@ export default {
       users:[],
       // 表单校验
       rules: {
-      }
+      },
+      userId: '',
     };
   },
   created() {
     this.getList();
     this.getTeachers();
-    this.getStudents();
+    this.userId = this.$store.state.user.userId;
   },
   methods: {
     /** 查询MyClass列表 */
@@ -278,7 +279,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加MyClass";
+      this.title = "添加教学班";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -288,7 +289,7 @@ export default {
         this.form = response.data;
         this.sysUserList = response.data.sysUserList;
         this.open = true;
-        this.title = "修改MyClass";
+        this.title = "修改教学班";
       });
     },
     /** 提交按钮 */

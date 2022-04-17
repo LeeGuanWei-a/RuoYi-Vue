@@ -109,6 +109,11 @@ public class MyClassServiceImpl implements IMyClassService
         return myClassMapper.getTeachers();
     }
 
+    @Override
+    public List<MyClass> selectAllClass() {
+        return this.myClassMapper.selectAllClass();
+    }
+
     /**
      * 新增用户信息信息
      * 

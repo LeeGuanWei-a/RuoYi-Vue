@@ -2,6 +2,7 @@ package com.ruoyi.schoolJob.service.impl;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import com.ruoyi.common.utils.StringUtils;
@@ -10,6 +11,7 @@ import com.ruoyi.schoolJob.domain.MyClass;
 import com.ruoyi.schoolJob.mapper.MyTitleMapper;
 import com.ruoyi.schoolJob.domain.MyTitle;
 import com.ruoyi.schoolJob.service.IMyTitleService;
+import org.springframework.web.bind.annotation.GetMapping;
 
 /**
  * MyTitleService业务层处理
@@ -20,6 +22,7 @@ public class MyTitleServiceImpl implements IMyTitleService
 {
     @Autowired
     private MyTitleMapper myTitleMapper;
+
 
     /**
      * 查询MyTitle
@@ -126,4 +129,6 @@ public class MyTitleServiceImpl implements IMyTitleService
             }
         }
     }
+
+
 }

@@ -39,14 +39,44 @@ public class MyTitle extends BaseEntity
 
     /** 文件路径 */
     @Excel(name = "文件路径")
-    private String upload;
+    private int fileId;
 
     /** 教学班Id */
     @Excel(name = "教学班Id")
     private Long classId;
 
+    private String classCode;
+
+    private Long userId;
+
+    private String userName;
+
     /** MyClass信息 */
     private List<MyClass> myClassList;
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getClassCode() {
+        return classCode;
+    }
+
+    public void setClassCode(String classCode) {
+        this.classCode = classCode;
+    }
 
     public void setTitleId(Long titleId) 
     {
@@ -93,16 +123,16 @@ public class MyTitle extends BaseEntity
     {
         return endTime;
     }
-    public void setUpload(String upload) 
-    {
-        this.upload = upload;
+
+    public int getFileId() {
+        return fileId;
     }
 
-    public String getUpload() 
-    {
-        return upload;
+    public void setFileId(int fileId) {
+        this.fileId = fileId;
     }
-    public void setClassId(Long classId) 
+
+    public void setClassId(Long classId)
     {
         this.classId = classId;
     }
@@ -130,7 +160,7 @@ public class MyTitle extends BaseEntity
             .append("description", getDescription())
             .append("startTime", getStartTime())
             .append("endTime", getEndTime())
-            .append("upload", getUpload())
+            .append("fileId", getFileId())
             .append("classId", getClassId())
             .append("myClassList", getMyClassList())
             .toString();
