@@ -1,6 +1,15 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
+    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="100px">
+      <el-form-item label="教学班编号" prop="classCode">
+        <el-input
+          v-model="queryParams.classCode"
+          placeholder="请输入教学班编号"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <el-form-item label="教学班" prop="className">
         <el-input
           v-model="queryParams.className"
@@ -10,9 +19,9 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="教师名称" prop="username">
+      <el-form-item label="教师名称" prop="nickName">
         <el-input
-          v-model="queryParams.username"
+          v-model="queryParams.nickName"
           placeholder="请输入教师名称"
           clearable
           size="small"
@@ -206,8 +215,9 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
+        classCode: null,
         className: null,
-        userId: null
+        nickName: null
       },
       // 表单参数
       form: {},

@@ -57,6 +57,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="titleName != null  and titleName != ''"> and t.title_name like concat('%', #{titleName}, '%')</if>
             <if test="workName != null  and workName != ''"> and w.work_name like concat('%', #{workName}, '%')</if>
             <if test="nickName != null  and nickName != ''"> and u.nick_name like concat('%', #{nickName}, '%')</if>
+            <if test="score == 1"> and w.score &gt;= 60</if>
+            <if test="score == 2"> and w.score &lt; 60</if>
         </where>
     </select>
     

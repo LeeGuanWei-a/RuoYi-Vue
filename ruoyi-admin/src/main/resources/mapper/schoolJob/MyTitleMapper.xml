@@ -40,11 +40,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectMyTitleVo"/>
         <where>  
             <if test="titleName != null  and titleName != ''"> and title_name like concat('%', #{titleName}, '%')</if>
-            <if test="description != null  and description != ''"> and description = #{description}</if>
             <if test="startTime != null "> and start_time = #{startTime}</if>
             <if test="endTime != null "> and end_time = #{endTime}</if>
-            <if test="fileId != null  and fileId != ''"> and fileId = #{fileId}</if>
-            <if test="classId != null "> and class_id = #{classId}</if>
+            <if test="classCode != null "> and class_code like concat('%', #{classCode}, '%')</if>
         </where>
     </select>
     

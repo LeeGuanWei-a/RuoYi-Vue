@@ -1,19 +1,19 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="题目名称" prop="titleName">
+    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="100px">
+      <el-form-item label="教学班编号" prop="classCode">
         <el-input
-          v-model="queryParams.titleName"
-          placeholder="请输入题目名称"
+          v-model="queryParams.classCode"
+          placeholder="请输入教学班编号"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="描述" prop="description">
+      <el-form-item label="题目名称" prop="titleName">
         <el-input
-          v-model="queryParams.description"
-          placeholder="请输入描述"
+          v-model="queryParams.titleName"
+          placeholder="请输入题目名称"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -34,15 +34,6 @@
           value-format="yyyy-MM-dd"
           placeholder="选择结束时间">
         </el-date-picker>
-      </el-form-item>
-      <el-form-item label="教学班" prop="classCode">
-        <el-input
-          v-model="queryParams.classCode"
-          placeholder="请输入教学班编号"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -276,11 +267,9 @@ export default {
         pageNum: 1,
         pageSize: 10,
         titleName: null,
-        description: null,
         startTime: null,
         endTime: null,
-        upload: null,
-        classId: null
+        classCode: null
       },
       // 表单参数
       form: {},

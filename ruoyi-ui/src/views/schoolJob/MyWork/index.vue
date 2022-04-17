@@ -1,10 +1,10 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="80px">
-      <el-form-item label="教学班" prop="classCode">
+    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="100px">
+      <el-form-item label="教学班编号" prop="classCode">
         <el-input
           v-model="queryParams.classCode"
-          placeholder="请输入教学班"
+          placeholder="请输入教学班编号"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -36,6 +36,16 @@
           size="small"
           @keyup.enter.native="handleQuery"
         />
+      </el-form-item>
+      <el-form-item label="分数" prop="nickName">
+        <el-select v-model="queryParams.score" placeholder="请选择">
+          <el-option
+            v-for="item in score"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -219,6 +229,7 @@ export default {
         classCode: null,
         nickName: null,
         titleName: null,
+        score: null,
       },
       // 表单参数
       form: {},
@@ -240,6 +251,13 @@ export default {
       userId: '',
       fileName: '',
       filePath: '',
+      score: [{
+        value: '1',
+        label: '及格'
+      }, {
+        value: '2',
+        label: '不及格'
+      }],
     };
   },
   created() {
@@ -316,6 +334,7 @@ export default {
     },
     /** 重置按钮操作 */
     resetQuery() {
+      this.queryParams.score = '';
       this.resetForm("queryForm");
       this.handleQuery();
     },

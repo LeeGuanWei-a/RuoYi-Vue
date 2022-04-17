@@ -59,8 +59,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         my_class c
         LEFT JOIN sys_user u ON c.user_id = u.user_id
         <where>
+            <if test="classCode != null  and classCode != ''"> and c.class_code like concat('%', #{classCode}, '%')</if>
             <if test="className != null  and className != ''"> and c.class_name like concat('%', #{className}, '%')</if>
-            <if test="userId != null "> and u.nick_name = #{nickName}</if>
+            <if test="nickName != null "> and u.nick_name like concat('%', #{nickName}, '%')</if>
         </where>
     </select>
 
