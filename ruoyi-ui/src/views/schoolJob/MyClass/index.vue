@@ -286,6 +286,7 @@ export default {
       this.reset();
       const classId = row.classId || this.ids
       getMyClass(classId).then(response => {
+        console.log()
         this.form = response.data;
         this.sysUserList = response.data.sysUserList;
         this.open = true;

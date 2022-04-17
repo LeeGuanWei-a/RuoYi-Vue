@@ -12,13 +12,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="titleId"    column="title_id"    />
         <result property="titleName"    column="title_name"    />
         <result property="score"    column="score"    />
-        <result property="upload"    column="upload"    />
+        <result property="fileId"    column="file_id"    />
         <result property="classId"    column="class_id"    />
         <result property="classCode"    column="class_code"    />
     </resultMap>
 
     <resultMap id="MyWorkMyTitleResult" type="MyWork" extends="MyWorkResult">
-        <collection property="myTitleList" notNullColumn="sub_title_id" javaType="java.util.List" resultMap="MyTitleResult" />
+        <collection property="myTitleList" notNullColumn="title_id" javaType="java.util.List" resultMap="MyTitleResult" />
     </resultMap>
 
     <resultMap type="MyTitle" id="MyTitleResult">
@@ -57,11 +57,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
     
     <select id="selectMyWorkByWorkId" parameterType="Long" resultMap="MyWorkMyTitleResult">
-        select a.work_id, a.work_name, a.user_id, a.title_id, a.score, a.upload,
- b.title_id as sub_title_id, b.title_name as sub_title_name, b.description as sub_description, b.start_time as sub_start_time, b.end_time as sub_end_time, b.upload as sub_upload, b.class_id as sub_class_id
-        from my_work a
-        left join my_title b on b.title_id = a.work_id
-        where a.work_id = #{workId}
+        <include refid="selectMyWorkVo"/>
+        <where>
+            w.work_id = #{workId}
+        </where>
     </select>
         
     <insert id="insertMyWork" parameterType="MyWork">

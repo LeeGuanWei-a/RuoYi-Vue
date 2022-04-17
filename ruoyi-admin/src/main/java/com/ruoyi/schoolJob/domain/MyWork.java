@@ -42,8 +42,7 @@ public class MyWork extends BaseEntity
     private Long score;
 
     /** 文件上传 */
-    @Excel(name = "文件上传")
-    private String upload;
+    private Long fileId;
 
 
     /** MyTitle信息 */
@@ -126,14 +125,13 @@ public class MyWork extends BaseEntity
     {
         return score;
     }
-    public void setUpload(String upload) 
-    {
-        this.upload = upload;
+
+    public Long getFileId() {
+        return fileId;
     }
 
-    public String getUpload() 
-    {
-        return upload;
+    public void setFileId(Long fileId) {
+        this.fileId = fileId;
     }
 
     public List<MyTitle> getMyTitleList()
@@ -154,8 +152,10 @@ public class MyWork extends BaseEntity
             .append("userId", getUserId())
             .append("titleId", getTitleId())
             .append("score", getScore())
-            .append("upload", getUpload())
+            .append("fileId", getFileId())
             .append("myTitleList", getMyTitleList())
             .toString();
     }
+
+
 }

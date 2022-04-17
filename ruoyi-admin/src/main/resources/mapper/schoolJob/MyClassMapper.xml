@@ -65,7 +65,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <select id="selectMyClassByClassId" parameterType="Long" resultMap="MyClassSysUserResult">
-        select a.class_id, a.class_name, a.user_id,
+        select a.class_id, a.class_name, a.user_id, a.class_code,
  b.user_id as sub_user_id, b.dept_id as sub_dept_id, b.user_name as sub_user_name, b.nick_name as sub_nick_name, b.user_type as sub_user_type, b.email as sub_email, b.phonenumber as sub_phonenumber, b.sex as sub_sex, b.avatar as sub_avatar, b.password as sub_password, b.status as sub_status, b.del_flag as sub_del_flag, b.login_ip as sub_login_ip, b.login_date as sub_login_date, b.create_by as sub_create_by, b.create_time as sub_create_time, b.update_by as sub_update_by, b.update_time as sub_update_time, b.remark as sub_remark
         from my_class a
         left join sys_user b on b.user_id = a.class_id
