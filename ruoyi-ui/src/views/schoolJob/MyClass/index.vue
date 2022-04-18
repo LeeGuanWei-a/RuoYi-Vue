@@ -169,8 +169,14 @@
         <el-transfer
           filterable
           filter-placeholder="请输入学生名称"
-          v-model="form.users"
-          :data="users">
+          v-model="users"
+          :data="userData"
+          :titles="['所有学生','班级学生']"
+          :button-texts="['移除','添加']"
+          :left-default-checked="[]"
+          :right-default-checked="[]"
+          @change="handleChange"
+        >
         </el-transfer>
       </el-dialog>
     </el-form>
@@ -225,10 +231,12 @@ export default {
       options:[],
       //学生列表
       users:[],
+      userData: [],
       // 表单校验
       rules: {
       },
       userId: '',
+      classId: '',
     };
   },
   created() {
@@ -334,39 +342,14 @@ export default {
         this.$modal.msgSuccess("删除成功");
       }).catch(() => {});
     },
-	/** 用户信息序号 */
-    rowSysUserIndex({ row, rowIndex }) {
-      row.index = rowIndex + 1;
-    },
-    /** 用户信息添加按钮操作 */
-    handleAddSysUser() {
-      let obj = {};
-      obj.deptId = "";
-      obj.userName = "";
-      obj.nickName = "";
-      obj.userType = "";
-      obj.email = "";
-      obj.phonenumber = "";
-      obj.sex = "";
-      obj.avatar = "";
-      obj.password = "";
-      obj.status = "";
-      obj.loginIp = "";
-      obj.loginDate = "";
-      obj.remark = "";
-      this.sysUserList.push(obj);
-    },
-    /** 用户信息删除按钮操作 */
-    handleDeleteSysUser() {
-      if (this.checkedSysUser.length == 0) {
-        this.$modal.msgError("请先选择要删除的用户信息数据");
-      } else {
-        const sysUserList = this.sysUserList;
-        const checkedSysUser = this.checkedSysUser;
-        this.sysUserList = sysUserList.filter(function(item) {
-          return checkedSysUser.indexOf(item.index) == -1
-        });
-      }
+    /** 学生显示*/
+
+    /** 学生修改*/
+    handleChange(value){
+      const userList = value
+      console.log(userList)
+      const classId = this.classId
+      // changeUsers(classId.userList)
     },
     /** 复选框选中数据 */
     handleSysUserSelectionChange(selection) {

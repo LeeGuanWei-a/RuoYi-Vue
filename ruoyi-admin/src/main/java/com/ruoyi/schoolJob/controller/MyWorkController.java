@@ -127,6 +127,7 @@ public class MyWorkController extends BaseController
     @GetMapping("/selectScore")
     public List selectScore(MyWork myWork)
     {
+        System.out.println(myWorkService.selectScore(myWork));
         return myWorkService.selectScore(myWork);
     }
 

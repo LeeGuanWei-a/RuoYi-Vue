@@ -134,17 +134,34 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         SELECT
         COUNT(*)
         FROM
-        my_work
-        WHERE
-        score &gt;= 60
+        my_work w
+            LEFT JOIN my_title t ON w.title_id = t.title_id
+            LEFT JOIN sys_user u ON w.user_id = u.user_id
+            LEFT JOIN my_class c ON t.class_id = c.class_id
+        <where>
+            <if test="classCode != null  and classCode != ''"> and c.class_code like concat('%', #{classCode}, '%')</if>
+            <if test="titleName != null  and titleName != ''"> and t.title_name like concat('%', #{titleName}, '%')</if>
+            <if test="workName != null  and workName != ''"> and w.work_name like concat('%', #{workName}, '%')</if>
+            <if test="nickName != null  and nickName != ''"> and u.nick_name like concat('%', #{nickName}, '%')</if>
+            and w.score &gt;= 60
+        </where>
+
     </select>
 
     <select id="selectFailed" resultType="java.lang.Integer">
         SELECT
         COUNT(*)
         FROM
-        my_work
-        WHERE
-        score &lt; 60
+        my_work w
+            LEFT JOIN my_title t ON w.title_id = t.title_id
+            LEFT JOIN sys_user u ON w.user_id = u.user_id
+            LEFT JOIN my_class c ON t.class_id = c.class_id
+        <where>
+            <if test="classCode != null  and classCode != ''"> and c.class_code like concat('%', #{classCode}, '%')</if>
+            <if test="titleName != null  and titleName != ''"> and t.title_name like concat('%', #{titleName}, '%')</if>
+            <if test="workName != null  and workName != ''"> and w.work_name like concat('%', #{workName}, '%')</if>
+            <if test="nickName != null  and nickName != ''"> and u.nick_name like concat('%', #{nickName}, '%')</if>
+            and w.score &lt; 60
+        </where>
     </select>
 </mapper>
