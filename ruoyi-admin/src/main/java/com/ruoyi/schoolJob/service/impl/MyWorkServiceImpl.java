@@ -167,6 +167,27 @@ public class MyWorkServiceImpl implements IMyWorkService
         return mapList;
     }
 
+    /**
+     * 查询作品分数分布(0-59,60-69,70-79,80-89,90-100)
+     * @param myWork
+     * @return
+     */
+    @Override
+    public List selectScores(MyWork myWork) {
+        List scoreList = new ArrayList();
+        int less60 = myWorkMapper.selectless60(myWork);
+        int less70 = myWorkMapper.selectless70(myWork);
+        int less80 = myWorkMapper.selectless80(myWork);
+        int less90 = myWorkMapper.selectless90(myWork);
+        int less100 = myWorkMapper.selectless100(myWork);
+        scoreList.add(less60);
+        scoreList.add(less70);
+        scoreList.add(less80);
+        scoreList.add(less90);
+        scoreList.add(less100);
+        return scoreList;
+    }
+
 
     /**
      * 新增MyTitle信息

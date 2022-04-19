@@ -60,3 +60,12 @@ export function selectScore(query) {
   })
 }
 
+// 查询作品分数分布(0-59,60-69,70-79,80-89,90-100)
+export function selectScores(query) {
+  return request({
+    url: '/schoolJob/MyWork/selectScores',
+    method: 'get',
+    params: query
+  })
+}
+

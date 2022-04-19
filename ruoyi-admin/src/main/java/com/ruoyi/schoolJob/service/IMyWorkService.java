@@ -66,10 +66,16 @@ public interface IMyWorkService
     public List<Map<String,Object>> selectTitle();
 
     /**
-     * 查询及格人数
+     * 查询作品分数人数
      * @param myWork
      * @return
      */
     public List selectScore(MyWork myWork);
 
+    /**
+     * 查询作品分数分布(0-59,60-69,70-79,80-89,90-100)
+     * @param myWork
+     * @return
+     */
+    public List selectScores(MyWork myWork);
 }

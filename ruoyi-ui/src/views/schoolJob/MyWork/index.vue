@@ -49,7 +49,8 @@
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button type="primary" icon="el-icon-s-check" size="mini" @click="getScore">绘图</el-button>
+<!--        <el-button type="primary" icon="el-icon-s-check" size="mini" @click="getScore">绘图</el-button>-->
+<!--        <el-button type="primary" icon="el-icon-s-check" size="mini" @click="getScores">绘图</el-button>-->
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
@@ -148,8 +149,9 @@
       @pagination="getList"
     />
 
-    <div style="width:600px;height:278px;">
-      <div id="myChart3" style="width:100%;height:278px;float:left;"></div>
+    <div style="width:1200px;height:278px;display: flex">
+      <div id="myChart3" style="width:50%;height:278px;float:left;"></div>
+      <div id="myChart4" style="width:50%;height:278px;float:right;"></div>
     </div>
 
     <!-- 添加或修改MyWork对话框 -->
@@ -197,7 +199,7 @@
 
 <script>
 import { getToken } from "@/utils/auth";
-import { listMyWork, getMyWork, delMyWork, addMyWork, updateMyWork, selectTitle, selectScore} from "@/api/schoolJob/MyWork";
+import { listMyWork, getMyWork, delMyWork, addMyWork, updateMyWork, selectTitle, selectScore, selectScores} from "@/api/schoolJob/MyWork";
 import {addInfo, getInfo} from "@/api/schoolJob/info";
 
 export default {
@@ -207,7 +209,9 @@ export default {
       myChart3: '',
       opinion3: ['及格作品数', '不及格作品数'],
       opinionData3: [],
-
+      myChart4: '',
+      opinion4: ['0-59', '60-69', '70-79', '80-89', '90-100'],
+      opinionData4: [],
       // 遮罩层
       loading: true,
       // 选中数组
@@ -269,6 +273,11 @@ export default {
       }],
       pass: '',
       fail: '',
+      less60: '',
+      less70: '',
+      less80: '',
+      less90: '',
+      less100: '',
     };
   },
   created() {
@@ -279,6 +288,7 @@ export default {
   mounted() {
     this.$nextTick(() =>{
       this.getScore();
+      this.getScores();
     })
   },
   methods: {
@@ -288,23 +298,24 @@ export default {
         this.pass = parseInt(res[0].value)
         this.fail = parseInt(res[1].value)
         this.drawLine2();
-        console.log(this.pass,this.fail)
-        // this.opinionData3.push(
-        //   {
-        //     value: parseInt(res[0].value),
-        //     name: res[0].name
-        //   },
-        //   {
-        //     value: parseInt(res[1].value),
-        //     name: res[1].name
-        //   });
-        // console.log(JSON.stringify(this.opinionData3))
+        //console.log(this.pass,this.fail)
+      });
+    },
+    getScores(){
+      selectScores(this.queryParams).then((res) => {
+        this.less60 = res[0]
+        this.less70 = res[1]
+        this.less80 = res[2]
+        this.less90 = res[3]
+        this.less100 = res[4]
+        this.opinionData4 = [],
+        this.opinionData4.push(this.less60,this.less70,this.less80,this.less90,this.less100)
+        //console.log(this.opinionData4)
+        this.drawLine4();
       });
     },
     //画图
     drawLine2 () {
-      var pass = this.pass;
-      console.log(pass)
       // console.log("开始画饼图")
       // 基于准备好的dom，初始化echarts实例
       this.myChart3 = this.$echarts.init(document.getElementById('myChart3'))
@@ -349,6 +360,43 @@ export default {
             }
           }
         ]
+      })
+    },
+    drawLine4 () {
+      // console.log("开始画饼图")
+      // 基于准备好的dom，初始化echarts实例
+      this.myChart4 = this.$echarts.init(document.getElementById('myChart4'))
+      // 绘制图表
+      this.myChart4.setOption({
+        title: {
+          text: '课程设计作品成绩分布情况', // 主标题
+          subtext: '', // 副标题
+        },
+        xAxis: {
+          type: 'category',
+          data: this.opinion4
+        },
+        yAxis: {
+          type:'value'
+        },
+        series: [
+          {
+            type: 'bar',
+            data: this.opinionData4,
+          }
+        ],
+        itemStyle: {
+          emphasis: {
+            shadowBlur: 10,
+            shadowOffsetX: 0,
+            shadowColor: 'rgba(0, 0, 0, 0.5)'
+          },
+          color: function (params) {
+            // 自定义颜色
+            var colorList = ['grey']
+            return colorList[params.dataIndex]
+          }
+        }
       })
     },
     //  选择题目
@@ -418,6 +466,7 @@ export default {
       this.queryParams.pageNum = 1;
       this.getList();
       this.getScore();
+      this.getScores();
     },
     /** 重置按钮操作 */
     resetQuery() {

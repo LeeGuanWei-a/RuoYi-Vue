@@ -96,4 +96,39 @@ public interface MyWorkMapper
      * @return
      */
     public int selectFailed(MyWork myWork);
+
+    /**
+     * 查询0-59
+     * @param myWork
+     * @return
+     */
+    public int selectless60(MyWork myWork);
+
+    /**
+     * 查询60-69
+     * @param myWork
+     * @return
+     */
+    public int  selectless70(MyWork myWork);
+
+    /**
+     * 查询70-79
+     * @param myWork
+     * @return
+     */
+    public int  selectless80(MyWork myWork);
+
+    /**
+     * 查询80-89
+     * @param myWork
+     * @return
+     */
+    public int  selectless90(MyWork myWork);
+
+    /**
+     * 查询90-100
+     * @param myWork
+     * @return
+     */
+    public int  selectless100(MyWork myWork);
 }

@@ -127,8 +127,18 @@ public class MyWorkController extends BaseController
     @GetMapping("/selectScore")
     public List selectScore(MyWork myWork)
     {
-        System.out.println(myWorkService.selectScore(myWork));
         return myWorkService.selectScore(myWork);
     }
 
+    /**
+     * 查询作品分数分布(0-59,60-69,70-79,80-89,90-100)
+     * @param myWork
+     * @return
+     */
+    @PreAuthorize("@ss.hasPermi('schoolJob:MyWork:list')")
+    @GetMapping("/selectScores")
+    public List selectScores(MyWork myWork)
+    {
+        return myWorkService.selectScores(myWork);
+    }
 }
