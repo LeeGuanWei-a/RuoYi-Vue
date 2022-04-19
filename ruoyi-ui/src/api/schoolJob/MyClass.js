@@ -51,3 +51,29 @@ export function delMyClass(classId) {
     method: 'delete'
   })
 }
+
+// 查询所有学生
+export function getStudent() {
+  return request({
+    url: '/schoolJob/MyClass/students',
+    method: 'get'
+  })
+}
+
+// 查询所有学生
+export function getStudentByClassId(data) {
+  return request({
+    url: '/schoolJob/MyClass/getStudentByClassId/' + data,
+    method: 'get',
+    data
+  })
+}
+
+// 修改教学班关联学生情况
+export function changeUsers(classId, userList) {
+  return request({
+    url: '/schoolJob/MyClass/changeUsers?classId=' + classId + '&&userList=' + userList,
+    method: 'post',
+    classId, userList
+  })
+}

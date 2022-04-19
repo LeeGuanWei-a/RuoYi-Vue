@@ -59,6 +59,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="nickName != null  and nickName != ''"> and u.nick_name like concat('%', #{nickName}, '%')</if>
             <if test="score == 1"> and w.score &gt;= 60</if>
             <if test="score == 2"> and w.score &lt; 60</if>
+            <if test="score == 3"> and w.score IS NULL</if>
         </where>
     </select>
     

@@ -150,6 +150,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             r.role_id = 100
     </select>
 
+    <select id="getStudentsByClassId" resultType="java.util.Map">
+        SELECT
+            u.user_id,u.nick_name
+        FROM
+            sys_user u
+                LEFT JOIN sys_user_role ur ON u.user_id = ur.user_id
+                LEFT JOIN sys_role r ON ur.role_id = r.role_id
+                LEFT JOIN my_course c ON u.user_id = c.user_id
+                LEFT JOIN my_class cs ON cs.class_id = c.class_id
+        WHERE
+            r.role_id = 100
+            AND
+            cs.class_id = #{classId}
+    </select>
+
     <select id="selectAllClass" resultType="java.util.Map">
         SELECT class_id as classId ,class_code as classCode FROM my_class
     </select>

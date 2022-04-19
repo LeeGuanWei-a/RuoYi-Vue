@@ -45,17 +45,17 @@
           v-hasPermi="['schoolJob:MyClass:add']"
         >新增</el-button>
       </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          plain
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['schoolJob:MyClass:edit']"
-        >修改</el-button>
-      </el-col>
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="success"-->
+<!--          plain-->
+<!--          icon="el-icon-edit"-->
+<!--          size="mini"-->
+<!--          :disabled="single"-->
+<!--          @click="handleUpdate"-->
+<!--          v-hasPermi="['schoolJob:MyClass:edit']"-->
+<!--        >修改</el-button>-->
+<!--      </el-col>-->
       <el-col :span="1.5">
         <el-button
           type="danger"
@@ -67,16 +67,16 @@
           v-hasPermi="['schoolJob:MyClass:remove']"
         >删除</el-button>
       </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          plain
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['schoolJob:MyClass:export']"
-        >导出</el-button>
-      </el-col>
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="warning"-->
+<!--          plain-->
+<!--          icon="el-icon-download"-->
+<!--          size="mini"-->
+<!--          @click="handleExport"-->
+<!--          v-hasPermi="['schoolJob:MyClass:export']"-->
+<!--        >导出</el-button>-->
+<!--      </el-col>-->
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
@@ -126,8 +126,11 @@
 
 
     <!-- 添加或修改MyClass对话框 -->
-    <el-dialog title="教学班信息" :visible.sync="open" width="550px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="550px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
+        <el-form-item label="教学班编号" prop="classCode" v-if="show === false">
+          <el-input v-model="form.classId" placeholder="请输入教学班编号" />
+        </el-form-item>
         <el-form-item label="教学班编号" prop="classCode">
           <el-input v-model="form.classCode" placeholder="请输入教学班编号" />
         </el-form-item>
@@ -147,9 +150,9 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item>
-          <el-button @click="transfer = true;" style="float: left; background-color: #87CEFA;">关联</el-button>
-        </el-form-item>
+<!--        <el-form-item v-if="title === '修改教学班'">-->
+<!--          <el-button @click="transfer = true; showBox()" style="float: left; background-color: #87CEFA;" >关联</el-button>-->
+<!--        </el-form-item>-->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -187,12 +190,14 @@
 </template>
 
 <script>
-import { listMyClass, listMyTeachers, getMyClass, delMyClass, addMyClass, updateMyClass } from "@/api/schoolJob/MyClass";
+import { listMyClass, listMyTeachers, getMyClass, delMyClass, addMyClass, updateMyClass,
+  getStudent, getStudentByClassId, changeUsers} from "@/api/schoolJob/MyClass";
 
 export default {
   name: "MyClass",
   data() {
     return {
+      show: true,
       //穿梭框
       transfer: false,
       // 遮罩层
@@ -297,17 +302,19 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
+      this.title = "";
       this.title = "添加教学班";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
       const classId = row.classId || this.ids
+      this.classId = classId
       getMyClass(classId).then(response => {
-        console.log()
         this.form = response.data;
         this.sysUserList = response.data.sysUserList;
         this.open = true;
+        this.title = "";
         this.title = "修改教学班";
       });
     },
@@ -343,13 +350,40 @@ export default {
       }).catch(() => {});
     },
     /** 学生显示*/
-
+    showBox(){
+      const userData = []
+      const classId = this.classId
+      getStudent().then((res) => {
+        //console.log(JSON.stringify(res))
+        for (let i = 0; i < res.length; i++){
+          userData.push({
+            key : res[i].user_id,
+            label : res[i].nick_name
+          })
+        }
+        this.userData = userData
+        //console.log(JSON.stringify(this.userData))
+      })
+      const users = []
+      getStudentByClassId(classId).then((res) => {
+        for (let i = 0; i < res.length; i++) {
+          users.push(
+            {
+              key : res[i].user_id,
+            }
+          )
+        }
+        this.users = users
+        console.log(JSON.stringify(this.users))
+      })
+    },
     /** 学生修改*/
     handleChange(value){
       const userList = value
-      console.log(userList)
+      //console.log(userList)
       const classId = this.classId
-      // changeUsers(classId.userList)
+      //console.log(JSON.stringify(classId))
+      changeUsers(classId,userList)
     },
     /** 复选框选中数据 */
     handleSysUserSelectionChange(selection) {
@@ -365,9 +399,9 @@ export default {
 };
 </script>
 
-<style scoped>
-  .width{
-    min-width: 850px;
-    max-width: 850px;
-  }
+<style>
+.width{
+  min-width: 850px;
+  max-width: 850px;
+}
 </style>

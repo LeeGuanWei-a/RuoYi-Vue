@@ -71,6 +71,9 @@ public interface IMyClassService
      */
     public List<SysUser> getStudents();
 
+
+    public List<SysUser> getStudentsByClassId(Long classId);
+
     /**
      * 查询教学班列表
      */

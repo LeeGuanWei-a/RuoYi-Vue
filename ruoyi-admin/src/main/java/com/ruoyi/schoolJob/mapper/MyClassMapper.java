@@ -98,6 +98,13 @@ public interface MyClassMapper
     public List<SysUser> getStudents();
 
     /**
+     * 查询教学班关联学生
+     * @param classId
+     * @return
+     */
+    public List<SysUser> getStudentsByClassId(Long classId);
+
+    /**
      * 查询教学班
      * @return
      */

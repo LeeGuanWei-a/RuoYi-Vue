@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.schoolJob.mapper.MyCourseMapper">
+    
+    <resultMap type="MyCourse" id="MyCourseResult">
+        <result property="classId"    column="class_id"    />
+        <result property="userId"    column="user_id"    />
+    </resultMap>
+
+    <sql id="selectMyCourseVo">
+        select class_id, user_id from my_course
+    </sql>
+
+    <select id="selectMyCourseList" parameterType="MyCourse" resultMap="MyCourseResult">
+        <include refid="selectMyCourseVo"/>
+        <where>  
+            <if test="classId != null "> and class_id = #{classId}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+        </where>
+    </select>
+    
+    <select id="selectMyCourseByClassId" parameterType="Long" resultMap="MyCourseResult">
+        <include refid="selectMyCourseVo"/>
+        where class_id = #{classId}
+    </select>
+        
+    <insert id="insertMyCourse" parameterType="MyCourse">
+        insert into my_course
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="classId != null">class_id,</if>
+            <if test="userId != null">user_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="classId != null">#{classId},</if>
+            <if test="userId != null">#{userId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMyCourse" parameterType="MyCourse">
+        update my_course
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+        </trim>
+        where class_id = #{classId}
+    </update>
+
+    <delete id="deleteMyCourseByClassId" parameterType="Long">
+        delete from my_course where class_id = #{classId}
+    </delete>
+
+    <delete id="deleteMyCourseByClassIds" parameterType="String">
+        delete from my_course where class_id in 
+        <foreach item="classId" collection="array" open="(" separator="," close=")">
+            #{classId}
+        </foreach>
+    </delete>
+</mapper>

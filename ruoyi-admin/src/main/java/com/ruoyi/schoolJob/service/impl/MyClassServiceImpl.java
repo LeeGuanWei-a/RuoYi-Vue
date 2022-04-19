@@ -122,6 +122,14 @@ public class MyClassServiceImpl implements IMyClassService
         return myClassMapper.getStudents();
     }
 
+    /**
+     * 查询教学班关联学生
+     * @param classId
+     * @return
+     */
+    public List<SysUser> getStudentsByClassId(Long classId){
+        return myClassMapper.getStudentsByClassId(classId);
+    }
 
     @Override
     public List<MyClass> selectAllClass() {

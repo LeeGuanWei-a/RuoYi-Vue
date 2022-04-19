@@ -66,17 +66,17 @@
           v-hasPermi="['schoolJob:MyWork:add']"
         >新增</el-button>
       </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          plain
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['schoolJob:MyWork:edit']"
-        >修改</el-button>
-      </el-col>
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="success"-->
+<!--          plain-->
+<!--          icon="el-icon-edit"-->
+<!--          size="mini"-->
+<!--          :disabled="single"-->
+<!--          @click="handleUpdate"-->
+<!--          v-hasPermi="['schoolJob:MyWork:edit']"-->
+<!--        >修改</el-button>-->
+<!--      </el-col>-->
       <el-col :span="1.5">
         <el-button
           type="danger"
@@ -88,16 +88,16 @@
           v-hasPermi="['schoolJob:MyWork:remove']"
         >删除</el-button>
       </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          plain
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['schoolJob:MyWork:export']"
-        >导出</el-button>
-      </el-col>
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="warning"-->
+<!--          plain-->
+<!--          icon="el-icon-download"-->
+<!--          size="mini"-->
+<!--          @click="handleExport"-->
+<!--          v-hasPermi="['schoolJob:MyWork:export']"-->
+<!--        >导出</el-button>-->
+<!--      </el-col>-->
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
@@ -155,7 +155,7 @@
     </div>
 
     <!-- 添加或修改MyWork对话框 -->
-    <el-dialog title="作品信息" :visible.sync="open" width="900px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="900px" append-to-body>
       <div class="block" style="margin-left:10px; margin-bottom: 25px">
         <span class="demonstration" style="font-weight: bolder;margin-right: 15px">题目名称</span>
         <el-cascader
@@ -264,13 +264,20 @@ export default {
       userId: '',
       fileName: '',
       filePath: '',
-      score: [{
+      score: [
+        {
         value: '1',
         label: '及格'
-      }, {
+      },
+        {
         value: '2',
         label: '不及格'
-      }],
+      },
+        {
+          value: '3',
+          label: '未评分'
+        }
+      ],
       pass: '',
       fail: '',
       less60: '',
