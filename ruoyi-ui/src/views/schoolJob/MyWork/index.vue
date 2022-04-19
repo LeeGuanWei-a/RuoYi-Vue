@@ -205,7 +205,7 @@ export default {
   data() {
     return {
       myChart3: '',
-      opinion3: ['及格人数', '不及格人数'],
+      opinion3: ['及格作品数', '不及格作品数'],
       opinionData3: [],
 
       // 遮罩层
@@ -272,14 +272,13 @@ export default {
     };
   },
   created() {
-    this.getScore();
     this.getList();
     this.selectTitle();
     this.userId = this.$store.state.user.userId;
   },
   mounted() {
     this.$nextTick(() =>{
-      this.drawLine2();
+      this.getScore();
     })
   },
   methods: {
@@ -288,6 +287,7 @@ export default {
       selectScore(this.queryParams).then((res) => {
         this.pass = parseInt(res[0].value)
         this.fail = parseInt(res[1].value)
+        this.drawLine2();
         console.log(this.pass,this.fail)
         // this.opinionData3.push(
         //   {
@@ -303,6 +303,8 @@ export default {
     },
     //画图
     drawLine2 () {
+      var pass = this.pass;
+      console.log(pass)
       // console.log("开始画饼图")
       // 基于准备好的dom，初始化echarts实例
       this.myChart3 = this.$echarts.init(document.getElementById('myChart3'))
@@ -330,8 +332,8 @@ export default {
             radius: '50%',
             center: ['50%', '50%'],
             data: [
-              {value: this.pass,name: '及格人数'},
-              {value: this.fail,name: '不及格人数'}
+              {value: this.pass,name: '及格作品数'},
+              {value: this.fail,name: '不及格作品数'}
             ],
             itemStyle: {
               emphasis: {
