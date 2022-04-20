@@ -110,6 +110,7 @@
       <el-table-column label="作品名称" align="center" prop="workName"/>
       <el-table-column label="学生名称" align="center" prop="nickName"/>
       <el-table-column label="作品分数" align="center" prop="score"/>
+      <el-table-column label="留言" align="message" prop="message"/>
       <el-table-column label="文件下载" align="center" prop="fileId">
         <template slot-scope="scope">
           <el-button
@@ -185,8 +186,11 @@
 
           </el-upload>
         </el-form-item>
-        <el-form-item label="作品分数" prop="score">
+        <el-form-item label="作品分数" prop="score" v-if="title === '修改作品'">
           <el-input v-model="form.score" placeholder="请输入作品分数" />
+        </el-form-item>
+        <el-form-item label="留言" prop="score" v-if="title === '修改作品'">
+          <el-input v-model="form.message" placeholder="请输入留言" />
         </el-form-item>
        </el-form>
       <div slot="footer" class="dialog-footer">
@@ -458,12 +462,12 @@ export default {
     // 表单重置
     reset() {
       this.form = {
+        classCode: null,
         workId: null,
         workName: null,
         userId: null,
         titleId: null,
-        score: null,
-        upload: null
+        score: null
       };
       this.myTitleList = [];
       this.resetForm("form");
@@ -491,6 +495,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
+      this.title = "";
       this.title = "添加作品";
       this.upload.fileList = [];
     },
@@ -502,6 +507,7 @@ export default {
         this.form = response.data;
         this.myTitleList = response.data.myTitleList;
         this.open = true;
+        this.title = "";
         this.title = "修改作品";
         this.upload.fileList = [{ name: this.form.fileName, url: this.form.filePath }];
       });

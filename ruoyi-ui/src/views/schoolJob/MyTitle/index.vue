@@ -372,6 +372,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
+      this.title = "";
       this.title = "添加题目";
       this.upload.fileList = [];
     },
@@ -384,6 +385,7 @@ export default {
         this.form = response.data;
         this.myClassList = response.data.myClassList;
         this.open = true;
+        this.title = "";
         this.title = "修改题目";
         this.upload.fileList = [{ name: this.form.fileName, url: this.form.filePath }];
       });

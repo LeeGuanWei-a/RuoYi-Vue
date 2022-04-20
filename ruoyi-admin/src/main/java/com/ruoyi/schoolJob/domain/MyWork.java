@@ -41,6 +41,8 @@ public class MyWork extends BaseEntity
     @Excel(name = "作品分数")
     private Long score;
 
+    private String message;
+
     /** 文件上传 */
     private int fileId;
 
@@ -126,6 +128,14 @@ public class MyWork extends BaseEntity
         return score;
     }
 
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
     public int getFileId() {
         return fileId;
     }
@@ -152,7 +162,8 @@ public class MyWork extends BaseEntity
             .append("userId", getUserId())
             .append("titleId", getTitleId())
             .append("score", getScore())
-            .append("fileId", getFileId())
+            .append("score", getScore())
+            .append("message", getMessage())
             .append("myTitleList", getMyTitleList())
             .toString();
     }

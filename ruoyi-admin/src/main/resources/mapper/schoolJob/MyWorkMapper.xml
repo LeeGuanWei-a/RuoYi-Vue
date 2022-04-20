@@ -12,6 +12,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="titleId"    column="title_id"    />
         <result property="titleName"    column="title_name"    />
         <result property="score"    column="score"    />
+        <result property="message"    column="message"    />
         <result property="fileId"    column="file_id"    />
         <result property="classId"    column="class_id"    />
         <result property="classCode"    column="class_code"    />
@@ -36,6 +37,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             w.work_id,
             w.work_name,
             w.score,
+            w.message,
             t.title_id,
             t.title_name,
             u.user_id,
@@ -79,6 +81,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="titleId != null">title_id,</if>
             <if test="fileId != null">file_id,</if>
             <if test="score != null">score,</if>
+            <if test="message != null">message,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="workId != null">#{workId},</if>
@@ -87,6 +90,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="titleId != null">#{titleId},</if>
             <if test="fileId != null">#{fileId},</if>
             <if test="score != null">#{score},</if>
+            <if test="message != null">#{message},</if>
          </trim>
     </insert>
 
@@ -98,6 +102,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="titleId != null">title_id = #{titleId},</if>
             <if test="fileId != null">file_id = #{fileId},</if>
             <if test="score != null">score = #{score},</if>
+            <if test="message != null">message = #{message},</if>
         </trim>
         where work_id = #{workId}
     </update>
