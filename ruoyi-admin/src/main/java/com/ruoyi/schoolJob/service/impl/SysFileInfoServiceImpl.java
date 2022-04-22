@@ -12,8 +12,6 @@ import java.util.List;
 /**
  * 文件信息Service业务层处理
  *
- * @author ruoyi
- * @date 2022-04-17
  */
 @Service
 public class SysFileInfoServiceImpl implements ISysFileInfoService

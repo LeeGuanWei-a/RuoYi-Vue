@@ -10,9 +10,7 @@ import org.springframework.stereotype.Service;
 
 /**
  * courseService业务层处理
- * 
- * @author ruoyi
- * @date 2022-04-19
+ *
  */
 @Service
 public class MyCourseServiceImpl implements IMyCourseService

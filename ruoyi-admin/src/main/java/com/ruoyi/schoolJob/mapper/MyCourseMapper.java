@@ -6,9 +6,7 @@ import java.util.List;
 
 /**
  * courseMapper接口
- * 
- * @author ruoyi
- * @date 2022-04-19
+ *
  */
 public interface MyCourseMapper 
 {

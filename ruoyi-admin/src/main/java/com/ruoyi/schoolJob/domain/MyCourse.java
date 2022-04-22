@@ -7,9 +7,6 @@ import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
  * course对象 my_course
- * 
- * @author ruoyi
- * @date 2022-04-19
  */
 public class MyCourse extends BaseEntity
 {
