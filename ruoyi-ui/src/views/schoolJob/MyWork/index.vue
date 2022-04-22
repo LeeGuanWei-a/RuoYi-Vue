@@ -404,7 +404,7 @@ export default {
           },
           color: function (params) {
             // 自定义颜色
-            var colorList = ['grey']
+            var colorList = ['#c23531','#2f4554', '#61a0a8', '#d48265', '#91c7ae','#749f83', '#ca8622']
             return colorList[params.dataIndex]
           }
         }
