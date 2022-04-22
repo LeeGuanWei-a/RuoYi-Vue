@@ -103,14 +103,17 @@
 
 <!--    列表-->
     <el-table v-loading="loading" :data="MyWorkList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="作品序号" v-if="false" align="center" prop="workId" />
+<!--      <el-table v-loading="loading" :data="MyWorkList" @selection-change="handleSelectionChange"-->
+<!--                :default-sort = "{prop: 'workId', order: 'descending'}">-->
+      <el-table-column type="selection" width="55" align="center"/>
+      <el-table-column label="作品序号" v-if="false" align="center" prop="workId"/>
+<!--      <el-table-column label="作品序号" align="center" prop="workId"  sortable :formatter="formatter"/>-->
       <el-table-column label="教学班" align="center" prop="classCode"/>
       <el-table-column label="题目名称" align="center" prop="titleName"/>
       <el-table-column label="作品名称" align="center" prop="workName"/>
       <el-table-column label="学生名称" align="center" prop="nickName"/>
       <el-table-column label="作品分数" align="center" prop="score"/>
-      <el-table-column label="留言" align="message" prop="message"/>
+      <el-table-column label="留言" align="center" prop="message"/>
       <el-table-column label="文件下载" align="center" prop="fileId">
         <template slot-scope="scope">
           <el-button
@@ -303,6 +306,9 @@ export default {
     })
   },
   methods: {
+    formatter(row, column) {
+      return row.workId;
+    },
     //分数情况
     getScore(){
       selectScore(this.queryParams).then((res) => {
